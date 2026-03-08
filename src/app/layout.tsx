@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { QueryProvider } from "@/providers";
+import { QueryProvider, AppProvider } from "@/providers";
 import { inter, josefinSans } from "./fonts";
 import "@/styles/globals.css";
 
@@ -15,8 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${josefinSans.variable} font-primary`}>
-        <QueryProvider>{children}</QueryProvider>
+      <body
+        className={`${inter.variable} ${josefinSans.variable} font-primary`}
+      >
+        <QueryProvider>
+          <AppProvider>{children}</AppProvider>
+        </QueryProvider>
       </body>
     </html>
   );

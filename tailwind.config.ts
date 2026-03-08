@@ -22,7 +22,7 @@ const config: Config = {
         md: "768px",
         lg: "1024px",
         xl: "1280px",
-        "2xl": "1400px",
+        "2xl": "1280px",
       },
     },
     extend: {
@@ -34,48 +34,71 @@ const config: Config = {
         "2xl": "1536px",
       },
       fontFamily: {
-        primary:   ["var(--font-inter)", "sans-serif"],
+        primary: ["var(--font-inter)", "sans-serif"],
         secondary: ["var(--font-josefin-sans)", "sans-serif"],
       },
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        sbackground: "var(--sbackground)",
         primary: {
           DEFAULT: "#2563EB",
-          dark:    "#1E40AF",
-          light:   "#EFF6FF",
+          dark: "#1E40AF",
+          light: "#93C5FD",
         },
         accent: {
-          DEFAULT: "#10B981",
-          light:   "#D1FAE5",
+          DEFAULT: "#34D399",
+          dark: "#10B981",
+          light: "#D1FAE5",
         },
         content: {
-          DEFAULT: "#1E293B",
-          muted:   "#64748B",
+          DEFAULT: "#000000",
+          muted: "#64748B",
           inverse: "#FFFFFF",
+          light: "#DBEAFE",
         },
         surface: {
           DEFAULT: "#FFFFFF",
-          dark:    "#1D3557",
+          dark: "#1D3557",
         },
       },
       fontSize: {
-        h1: ["3.5rem",  { lineHeight: "1.2",  fontWeight: "700" }],
-        h2: ["2.5rem",  { lineHeight: "1.25", fontWeight: "600" }],
-        h3: ["2rem",    { lineHeight: "1.3",  fontWeight: "600" }],
-        h4: ["1.5rem",  { lineHeight: "1.35", fontWeight: "600" }],
-        h5: ["1.25rem", { lineHeight: "1.4",  fontWeight: "500" }],
-        h6: ["1rem",    { lineHeight: "1.5",  fontWeight: "500" }],
-        "h1-mobile": ["2.5rem",   { lineHeight: "1.2",  fontWeight: "700" }],
-        "h2-mobile": ["2rem",     { lineHeight: "1.25", fontWeight: "600" }],
-        "h3-mobile": ["1.5rem",   { lineHeight: "1.3",  fontWeight: "600" }],
-        "h4-mobile": ["1.25rem",  { lineHeight: "1.35", fontWeight: "600" }],
-        "h5-mobile": ["1.125rem", { lineHeight: "1.4",  fontWeight: "500" }],
-        "h6-mobile": ["1rem",     { lineHeight: "1.5",  fontWeight: "500" }],
+        // Desktop
+        h1: ["3.5rem", { lineHeight: "1.2" }],
+        h2: ["2.5rem", { lineHeight: "1.25" }],
+        h3: ["2rem", { lineHeight: "1.3" }],
+        h4: ["1.5rem", { lineHeight: "1.35" }],
+        h5: ["1.25rem", { lineHeight: "1.4" }],
+        h6: ["1rem", { lineHeight: "1.5" }],
+        // Mobile
+        "h1-mobile": ["2.3rem", { lineHeight: "1.2" }],
+        "h2-mobile": ["2rem", { lineHeight: "1.25" }],
+        "h3-mobile": ["1.5rem", { lineHeight: "1.3" }],
+        "h4-mobile": ["1.25rem", { lineHeight: "1.35" }],
+        "h5-mobile": ["1.125rem", { lineHeight: "1.4" }],
+        "h6-mobile": ["1rem", { lineHeight: "1.5" }],
       },
     },
   },
   plugins: [],
+  // Safelist classes that may be applied dynamically via JS data
+  // Tailwind's JIT scanner only sees literal strings, so when class names
+  // come from variables (e.g. props.bg) they can be purged unless we list
+  // them here. Add any color/bg/spacing utilities you expect to use.
+  safelist: [
+    // background colours used in FEATURE cards
+    "bg-primary",
+    "bg-primary-dark",
+    "bg-primary-light",
+    "bg-accent",
+    "bg-accent-dark",
+    "bg-accent-light",
+    // icon backgrounds
+    "bg-primary",
+    "bg-accent-dark",
+    // other common dynamic utilities (add as needed)
+    "md:mt-0",
+    "md:mt-16",
+  ],
 };
 
 export default config;
