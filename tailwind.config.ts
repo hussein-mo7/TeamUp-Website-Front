@@ -43,7 +43,7 @@ const config: Config = {
         primary: {
           DEFAULT: "#2563EB",
           dark: "#1E40AF",
-          light: "#93C5FD",
+          light: "#DBEAFE",
         },
         accent: {
           DEFAULT: "#34D399",

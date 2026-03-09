@@ -8,7 +8,7 @@ import {
 
 const Home = () => {
   return (
-    <main>
+    <main className="overflow-hidden">
       <MainSection />
       <FeaturesSection />
       <VisionSection />

@@ -35,7 +35,7 @@ const STEPS = [
 
 const ProcessSection = () => {
   return (
-    <section id="process" className="bg-primary py-20 md:py-48  overflow-hidden">
+    <section id="process" className="bg-primary py-20 md:py-28 overflow-hidden">
       <Container>
 
         {/* ── Section Header ── */}

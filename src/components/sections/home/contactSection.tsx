@@ -23,7 +23,7 @@ const ContactSection = () => {
   return (
     <section
       id="contact"
-      className="relative bg-surface py-20 md:py-48 overflow-hidden"
+      className="relative bg-surface py-20 md:py-28 overflow-hidden"
     >
       {/* Decorative wave */}
       <div
@@ -40,7 +40,7 @@ const ContactSection = () => {
 
       {/* Rotating star */}
       <span
-        className="absolute top-[38%] left-[38%] w-8 h-8 animate-spin-slow"
+        className="absolute top-[38%] left-[80%] md:left-[39%] w-6 h-6 animate-spin-slow"
         aria-hidden="true"
       >
         <Image src="/images/star.svg" alt="" fill className="object-contain" />
@@ -111,7 +111,7 @@ const ContactSection = () => {
           {/* ── Right: Form card ── */}
           <div
             className="w-full md:w-[53%] bg-white rounded-2xl border border-gray-100
-              shadow-[0_4px_40px_rgba(0,0,0,0.06)] p-8 md:p-12"
+              shadow-[0_4px_40px_rgba(0,0,0,0.06)] p-4 md:p-12"
             data-aos="fade-left"
             data-aos-delay="100"
           >

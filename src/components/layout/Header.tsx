@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X, Sparkles } from "lucide-react";
 import { Container } from "@/components/layout";
 import Image from "next/image";
 
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "/#home" },
   { label: "Features", href: "/#features" },
   { label: "Our Vision", href: "/#vision" },
   { label: "Our Process", href: "/#process" },
@@ -16,12 +15,12 @@ const NAV_LINKS = [
 ];
 
 const Header = () => {
-  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState<string>("/");
   const pillRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +29,38 @@ const Header = () => {
     const onScroll = () => setIsScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* ── active section via IntersectionObserver ── */
+  useEffect(() => {
+    const sectionIds = ["features", "vision", "process", "contact"];
+    const observers: IntersectionObserver[] = [];
+
+    // Home is active when at the very top
+    const onScroll = () => {
+      if (window.scrollY < 80) setActiveSection("/");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(`/#${id}`);
+        },
+        { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observers.forEach((o) => o.disconnect());
+    };
   }, []);
 
   /* ── open animation ── */
@@ -100,6 +131,7 @@ const Header = () => {
                   src="/images/logo.png"
                   alt="TeamUp Logo"
                   fill
+                  quality={100}
                   unoptimized
                   className="object-contain"
                 />
@@ -123,7 +155,7 @@ const Header = () => {
               />
 
               {NAV_LINKS.map((link, i) => {
-                const isActive = pathname === link.href;
+                const isActive = activeSection === link.href;
                 return (
                   <Link
                     key={link.href}
@@ -171,6 +203,7 @@ const Header = () => {
                   hover:-translate-y-px"
               >
                 <span className="relative z-10 flex items-center gap-1.5">
+                  <Sparkles size={13} aria-hidden="true" />
                   Sign Up
                 </span>
               </Link>
@@ -274,7 +307,7 @@ const Header = () => {
                     aria-label="Mobile navigation"
                   >
                     {NAV_LINKS.map((link, i) => {
-                      const isActive = pathname === link.href;
+                      const isActive = activeSection === link.href;
                       return (
                         <Link
                           key={link.href}
@@ -330,9 +363,14 @@ const Header = () => {
                     hover:bg-primary-dark transition-all duration-200
                     flex items-center justify-center gap-2"
                 >
-                  Sign Up 
+                  <Sparkles size={14} aria-hidden="true" />
+                  Sign Up Free
                 </Link>
               </div>
+
+              <p className="text-center text-[11px] text-content-muted mt-5 mb-1 font-primary">
+                © 2026 TeamUp — Al-Azhar University
+              </p>
             </Container>
           </div>
         </div>

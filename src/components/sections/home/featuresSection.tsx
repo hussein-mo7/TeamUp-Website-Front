@@ -8,7 +8,7 @@ const FeaturesSection = () => {
   return (
     <section
       id="features"
-      className="relative w-full bg-sbackground py-20 md:py-48"
+      className="relative w-full bg-sbackground py-20 md:py-28"
     >
       <Container>
         {/* Section header */}

@@ -6,9 +6,9 @@ import Image from "next/image";
 const MainSection = () => {
   return (
     <Container as="main">
-      <section className="min-h-screen bg-surface flex items-center pt-28 md:pt-28 pb-16">
+      <section id="home" className="relative min-h-screen bg-surface flex items-center pt-28 md:pt-28 pb-16">
         <div className="w-full flex flex-col-reverse md:flex-row items-center gap-8 md:gap-0">
-          {/* ── Left: Text Content ────────────────────────── */}
+          {/* ── Left: Text Content ── */}
           <div
             className="w-full md:w-[45%] flex flex-col gap-5"
             data-aos="fade-right"
@@ -35,7 +35,7 @@ const MainSection = () => {
             </Link>
           </div>
 
-          {/* ── Right: Image Collage ──────────────────────── */}
+          {/* ── Right: Image Collage ── */}
           <div
             className="relative w-full md:w-[55%] h-[300px] md:h-[560px]"
             data-aos="fade-left"
@@ -48,6 +48,30 @@ const MainSection = () => {
               unoptimized
               className="object-contain object-right scale-100"
             />
+            <span
+              className="absolute top-[45%] left-[2%] md:left-[5%] w-6 md:w-7 h-7 animate-spin-slow"
+              aria-hidden="true"
+            >
+              <Image
+                src="/images/star.svg"
+                alt=""
+                fill
+                className="object-contain"
+              />
+            </span>
+
+            {/* ── Spinning star — bottom right area ── */}
+            <span
+              className="absolute bottom-[15%] md:bottom-[20%] right-[10%] md:right-[20%] w-5 h-5 animate-spin-slow"
+              aria-hidden="true"
+            >
+              <Image
+                src="/images/star.svg"
+                alt=""
+                fill
+                className="object-contain"
+              />
+            </span>
           </div>
         </div>
       </section>
