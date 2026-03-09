@@ -3,6 +3,7 @@ import {
   FeaturesSection,
   VisionSection,
   ProcessSection,
+  ContactSection,
 } from "../sections/home";
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
       <FeaturesSection />
       <VisionSection />
       <ProcessSection />
+      <ContactSection />
     </main>
   );
 };

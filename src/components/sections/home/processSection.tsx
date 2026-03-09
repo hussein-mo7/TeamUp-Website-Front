@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Container } from "@/components/layout";
 import { Heading } from "@/components/ui/typography";
 
@@ -7,37 +8,42 @@ const STEPS = [
     title: "Create Your Profile",
     description:
       "Sign up and build your academic profile. Highlight your skills, interests, and GPA to let others know what you bring to the table.",
+    showLine: true,
   },
   {
     number: "02",
     title: "Discover Opportunities",
     description:
       "Browse through innovative project ideas or search for existing teams looking for members with your specific skillset.",
+    showLine: true,
   },
   {
     number: "03",
     title: "Form or Join a Team",
     description:
       "Send join requests to teams you like, or create your own project and invite peers and a supervisor to start the collaboration.",
+    showLine: true,
   },
   {
     number: "04",
     title: "Manage & Deliver",
     description:
       "Use our integrated dashboard to track tasks, schedule Zoom meetings, and communicate with your mentor until graduation day.",
+    showLine: false,
   },
 ];
 
 const ProcessSection = () => {
   return (
-    <section id="process" className="bg-primary py-20 md:py-28 overflow-hidden">
+    <section id="process" className="bg-primary py-20 md:py-48  overflow-hidden">
       <Container>
+
         {/* ── Section Header ── */}
         <div className="text-center mb-16 md:mb-20" data-aos="fade-up">
-          <Heading level="h4" className="font-medium text-white mb-3">
+          <Heading level="h3" className="font-medium text-white mb-3">
             How It Works
           </Heading>
-          <p className="font-primary text-content-light text-sm md:text-base">
+          <p className="font-primary text-white/70 text-sm md:text-base">
             Your Journey to Success in 4 Simple Steps
           </p>
         </div>
@@ -51,52 +57,49 @@ const ProcessSection = () => {
               data-aos="fade-up"
               data-aos-delay={`${i * 150}`}
             >
-              {/* Number circle + dotted line row */}
+              {/* Circle + line row */}
               <div className="relative w-full flex items-center justify-center">
-                {/* Dotted line — left side (not on first item) */}
-                {i !== 0 && (
-                  <div
-                    className="hidden md:block absolute right-[calc(50%+32px)] left-0
-                      border-t-2 border-dashed border-white/35 top-1/2 -translate-y-1/2"
-                    aria-hidden="true"
-                  />
-                )}
 
-                {/* Dotted line — right side (not on last item) */}
-                {i !== STEPS.length - 1 && (
-                  <div
-                    className="hidden md:block absolute left-[calc(50%+32px)] right-0
-                      border-t-2 border-dashed border-white/35 top-1/2 -translate-y-1/2"
-                    aria-hidden="true"
-                  />
-                )}
-
-                {/* Circle */}
-                <div
-                  className="relative z-10 w-16 h-16 rounded-full
-                  bg-white/10 border-2 border-white/30
-                  flex items-center justify-center flex-shrink-0
-                  shadow-[0_0_0_8px_rgba(255,255,255,0.06)]
-                  backdrop-blur-sm"
-                >
-                  <span className="font-secondary font-bold text-white text-xl">
+                {/* Number circle */}
+                <div className="relative z-10 w-20 h-20 rounded-full border-2 bg-white
+                  flex items-center justify-center flex-shrink-0">
+                  <span className="font-bold text-primary text-3xl tracking-wider">
                     {step.number}
                   </span>
                 </div>
+
+                {/* Dashed line — sits to the right of circle, centered vertically, desktop only */}
+                {step.showLine && (
+                  <div
+                    className="hidden md:block absolute w-[80px] lg:w-[130px] xl:w-[145px] top-1/2 -translate-y-1/2 md:left-[80%] lg:left-[75%] xl:left-[79%]"
+                    aria-hidden="true"
+                  >
+                    <Image
+                      src="/images/Line 1.svg"
+                      alt=""
+                      width={153}
+                      height={4}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                )}
+
               </div>
 
               {/* Step text */}
               <div className="flex flex-col gap-2 px-2">
                 <h3 className="font-secondary font-bold text-white text-base">
-                  {step.title}
+                  {step.title} 
                 </h3>
                 <p className="font-primary text-white/70 text-xs leading-relaxed">
                   {step.description}
                 </p>
               </div>
+
             </div>
           ))}
         </div>
+
       </Container>
     </section>
   );

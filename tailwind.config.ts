@@ -52,9 +52,9 @@ const config: Config = {
         },
         content: {
           DEFAULT: "#000000",
-          muted: "#64748B",
+          muted: "#BFC6CC",
           inverse: "#FFFFFF",
-          light: "#DBEAFE",
+          light: "#475569",
         },
         surface: {
           DEFAULT: "#FFFFFF",

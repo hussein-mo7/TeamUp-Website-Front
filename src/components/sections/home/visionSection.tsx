@@ -4,7 +4,7 @@ import { Heading } from "@/components/ui/typography";
 
 const VisionSection = () => {
   return (
-    <section id="vision" className="relative w-full py-20 md:py-28">
+    <section id="vision" className="relative w-full py-20 md:py-48">
       <Container className="w-full flex justify-center items-center gap-10 flex-col md:flex-row">
         {/* Image — slides in from left */}
         <div
@@ -34,7 +34,7 @@ const VisionSection = () => {
           </Heading>
 
           <p
-            className="text-sm text-content-muted"
+            className="text-sm text-content-light"
             data-aos="fade-left"
             data-aos-duration="800"
             data-aos-delay="200"

@@ -8,7 +8,7 @@ const FeaturesSection = () => {
   return (
     <section
       id="features"
-      className="relative w-full bg-sbackground py-20 md:py-32"
+      className="relative w-full bg-sbackground py-20 md:py-48"
     >
       <Container>
         {/* Section header */}
@@ -16,7 +16,7 @@ const FeaturesSection = () => {
           <Heading level="h3" className="text-content mb-3">
             Our Features
           </Heading>
-          <p className="font-primary text-content-muted text-base max-w-xs mx-auto leading-relaxed">
+          <p className="font-primary text-content-light text-base max-w-xs mx-auto leading-relaxed">
             Streamline your journey from the first idea to the final submission
           </p>
         </div>
