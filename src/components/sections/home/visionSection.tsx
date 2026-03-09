@@ -34,7 +34,7 @@ const VisionSection = () => {
           </Heading>
 
           <p
-            className="text-sm text-content-muted"
+            className="text-sm text-content-light"
             data-aos="fade-left"
             data-aos-duration="800"
             data-aos-delay="200"

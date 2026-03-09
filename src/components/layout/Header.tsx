@@ -187,7 +187,7 @@ const Header = () => {
               <Link
                 href="/sign-in"
                 className="px-5 py-2 text-sm font-medium font-primary
-                  text-primary border border-primary/30 rounded-xl
+                  text-primary border border-primary/30 rounded-lg
                   hover:border-primary hover:bg-primary-light
                   transition-all duration-200"
               >
@@ -196,7 +196,7 @@ const Header = () => {
               <Link
                 href="/sign-up"
                 className="relative px-5 py-2 text-sm font-medium font-primary
-                  text-white bg-primary rounded-xl overflow-hidden
+                  text-white bg-primary rounded-lg overflow-hidden
                   hover:bg-primary-dark transition-all duration-200
                   shadow-[0_2px_12px_rgba(37,99,235,0.35)]
                   hover:shadow-[0_4px_18px_rgba(37,99,235,0.45)]
@@ -214,7 +214,7 @@ const Header = () => {
               type="button"
               onClick={isMenuOpen ? closeMenu : openMenu}
               className="md:hidden relative w-9 h-9 flex items-center justify-center
-                rounded-xl text-content hover:text-primary hover:bg-primary-light
+                rounded-lg text-content hover:text-primary hover:bg-primary-light
                 transition-all duration-200"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
@@ -348,7 +348,7 @@ const Header = () => {
                   href="/sign-in"
                   onClick={closeMenu}
                   className="w-full text-center py-3 text-sm font-semibold font-primary
-                    text-primary border border-primary/30 rounded-2xl
+                    text-primary border border-primary/30 rounded-lg
                     hover:bg-primary-light hover:border-primary
                     transition-all duration-200"
                 >
@@ -358,7 +358,7 @@ const Header = () => {
                   href="/sign-up"
                   onClick={closeMenu}
                   className="w-full text-center py-3 text-sm font-semibold font-primary
-                    text-white bg-primary rounded-2xl
+                    text-white bg-primary rounded-lg
                     shadow-[0_2px_12px_rgba(37,99,235,0.35)]
                     hover:bg-primary-dark transition-all duration-200
                     flex items-center justify-center gap-2"
