@@ -2,7 +2,7 @@ import React from "react";
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-interface HeadingProps {
+interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level: HeadingLevel;
   children: React.ReactNode;
   className?: string;
@@ -17,12 +17,15 @@ const headingStyles: Record<HeadingLevel, string> = {
   h6: "text-h6-mobile md:text-h6",
 };
 
-const Heading: React.FC<HeadingProps> = ({ level, children, className = "" }) => {
+const Heading = ({
+  level,
+  children,
+  className = "",
+  ...props
+}: HeadingProps) => {
   const Tag = level;
-  const baseStyles = headingStyles[level];
-
   return (
-    <Tag className={`${baseStyles} ${className}`.trim()}>
+    <Tag className={`${headingStyles[level]} ${className}`.trim()} {...props}>
       {children}
     </Tag>
   );
