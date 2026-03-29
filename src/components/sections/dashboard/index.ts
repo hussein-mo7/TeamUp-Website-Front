@@ -10,4 +10,14 @@ export {
   ActivityProjectCard,
 } from "./activity";
 export { SettingsShell, SettingsSidebar } from "./settings";
+export {
+  ProjectSettingsShell,
+  ProjectSettingsSidebar,
+  ProjectGeneralInfoForm,
+  ProjectSettingsSectionPlaceholder,
+  ProjectTeamManagementForm,
+  ProjectMilestonesForm,
+  ProjectPrivacyForm,
+  ProjectSubmissionForm,
+} from "./project-settings";
 export { TeamWorkspaceView } from "./workspace";

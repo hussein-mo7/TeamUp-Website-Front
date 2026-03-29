@@ -59,7 +59,7 @@ export const MOCK_WORKSPACE_MEMBERS: MockWorkspaceMember[] = [
   {
     id: 5,
     name: "Mentor Name",
-    role: "Mentor",
+    role: "Role",
     isTeamAdmin: false,
     avatar: "/images/user.jpg",
   },

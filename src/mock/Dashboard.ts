@@ -8,7 +8,7 @@ export const MOCK_USER = {
   userRole: "team_admin" as UserRole,
   avatar: "/images/Group 2.png",
   skills: ["UI design", "Ux design", "web design", "mobile design"],
-  hasTeam: true,
+  hasTeam: false,
   profileCompletion: 80,
   university: "AlAzhar",
   major: "Software Engineering",
@@ -57,7 +57,7 @@ export const MOCK_MILESTONES = [
     id: 3,
     title: "Proposal Approval",
     status: "in-progress" as const,
-    date: "Targe 30 Des 2025",
+    date: "Target 30 Des 2025",
   },
   {
     id: 4,
@@ -90,6 +90,100 @@ export const DASHBOARD_NAV_LINKS = [
 
 /** Main dashboard “Go to project workspace” → Team Work Space page. */
 export const TEAM_WORKSPACE_HREF = "/dashboard/workspace";
+
+/** Lead-only project settings (sidebar + routes). */
+export const PROJECT_SETTINGS_BASE = "/dashboard/workspace/settings";
+
+export const PROJECT_SETTINGS_NAV_LINKS = [
+  {
+    id: "general" as const,
+    label: "General Info",
+    href: `${PROJECT_SETTINGS_BASE}/general`,
+  },
+  {
+    id: "team" as const,
+    label: "Team Management",
+    href: `${PROJECT_SETTINGS_BASE}/team`,
+  },
+  {
+    id: "milestones" as const,
+    label: "Project Milestones",
+    href: `${PROJECT_SETTINGS_BASE}/milestones`,
+  },
+  {
+    id: "privacy" as const,
+    label: "Privacy & Visibility",
+    href: `${PROJECT_SETTINGS_BASE}/privacy`,
+  },
+  {
+    id: "submission" as const,
+    label: "Project Submission",
+    href: `${PROJECT_SETTINGS_BASE}/submission`,
+  },
+];
+
+/** Project Settings → Team Management tab (mock). */
+export const MOCK_TEAM_PROJECT_SETTINGS = {
+  capacity: 5,
+  requiredSkills: ["ui design", "Ux design", "web design"],
+};
+
+/** Project Settings → Privacy & Visibility dropdowns (mock). */
+export const PROJECT_MEMBERSHIP_APPLICATION_OPTIONS = [
+  { value: "open", label: "Open to new members" },
+  { value: "closed", label: "Closed — no new applications" },
+  { value: "invite", label: "Invite only" },
+];
+
+export const PROJECT_MARKETPLACE_VISIBILITY_OPTIONS = [
+  {
+    value: "private",
+    label: "Private (only mentor and members can see it)",
+  },
+  { value: "public", label: "Visible in the ideas marketplace" },
+  { value: "unlisted", label: "Unlisted — link only" },
+];
+
+export const MOCK_PROJECT_PRIVACY_SETTINGS = {
+  membershipApplications: "open",
+  marketplaceVisibility: "private",
+};
+
+/** Create Project Team modal — step 1 dropdowns (mock). */
+export const CREATE_PROJECT_CATEGORY_OPTIONS = [
+  { value: "", label: "Select" },
+  { value: "software", label: "Software" },
+  { value: "design", label: "Design" },
+  { value: "research", label: "Research" },
+];
+
+export const CREATE_PROJECT_UNIVERSITY_OPTIONS = [
+  { value: "", label: "Select" },
+  { value: "alazhar", label: "AlAzhar" },
+  { value: "cairo", label: "Cairo University" },
+];
+
+export const CREATE_PROJECT_MAJOR_OPTIONS = [
+  { value: "", label: "Select" },
+  { value: "se", label: "Software Engineering" },
+  { value: "cs", label: "Computer Science" },
+];
+
+/** General tab — mock until API (aligned with workspace copy). */
+export const MOCK_PROJECT_SETTINGS = {
+  title: "TeamUp",
+  bannerImage: "/images/Team.jpg",
+  supervisor: "Dr Name",
+  university: "AlAzhar",
+  major: "Software Engineering",
+};
+
+/** “New mentor” dropdown in Request Mentor Change modal (mock). */
+export const MOCK_NEW_MENTOR_OPTIONS = [
+  { value: "dr-khalid", label: "Dr. Khalid Omar" },
+  { value: "dr-nour", label: "Dr. Nour El-Din" },
+  { value: "dr-layla", label: "Dr. Layla Mahmoud" },
+];
 
 /** Settings area — sidebar labels and routes (mock). */
 export const MOCK_PROFILE_DISPLAY_ROLE = "Student";

@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { MOCK_PROJECT } from "@/mock/Dashboard";
+import { LeaveProjectModal } from "@/components/ui/modals";
 import type { WorkspaceView } from "@/mock/TeamWorkspace";
 import {
   WORKSPACE_PROJECT_DESCRIPTION,
@@ -25,11 +27,15 @@ interface TeamWorkspaceViewProps {
 
 const TeamWorkspaceView = ({ view }: TeamWorkspaceViewProps) => {
   const isLead = view === "lead";
+  const [leaveModalOpen, setLeaveModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-6">
       <div className="flex min-w-0 flex-1 flex-col">
-        <WorkspaceHeader isLead={isLead} />
+        <WorkspaceHeader
+          isLead={isLead}
+          onLeaveRequest={() => setLeaveModalOpen(true)}
+        />
         <WorkspaceProjectOverview
           projectName={MOCK_PROJECT.name}
           supervisor={MOCK_PROJECT.supervisor}
@@ -49,6 +55,13 @@ const TeamWorkspaceView = ({ view }: TeamWorkspaceViewProps) => {
           onlineCount={MOCK_WORKSPACE_ONLINE_COUNT}
         />
       </div>
+
+      <LeaveProjectModal
+        isOpen={leaveModalOpen}
+        projectName={MOCK_PROJECT.name}
+        onClose={() => setLeaveModalOpen(false)}
+        onConfirm={() => console.log("leave project confirmed (mock)")}
+      />
     </div>
   );
 };

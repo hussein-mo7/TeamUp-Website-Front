@@ -32,7 +32,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         ref={ref}
         type={type}
         disabled={disabled}
-        className={`inline-flex shrink-0 items-center justify-center rounded-lg font-primary font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50 ${variantClasses[variant]} ${iconButtonSizeClasses[size]} ${className}`}
+        className={`inline-flex shrink-0 items-center justify-center rounded-full font-primary font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50 ${variantClasses[variant]} ${iconButtonSizeClasses[size]} ${className}`}
         {...props}
       />
     );

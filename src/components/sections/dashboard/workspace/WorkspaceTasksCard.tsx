@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import type { MockWorkspaceTask } from "@/mock/TeamWorkspace";
+import { DeleteTaskModal } from "@/components/ui/modals";
 import WorkspaceCard from "./WorkspaceCard";
 import DashboardTaskRow from "../shared/DashboardTaskRow";
 import { Button, IconButton } from "@/components/ui/buttons";
@@ -15,6 +16,7 @@ interface WorkspaceTasksCardProps {
 const WorkspaceTasksCard = ({ initialTasks, isLead }: WorkspaceTasksCardProps) => {
   const [tasks, setTasks] = useState(initialTasks);
   const [menuId, setMenuId] = useState<number | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<MockWorkspaceTask | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -83,7 +85,7 @@ const WorkspaceTasksCard = ({ initialTasks, isLead }: WorkspaceTasksCardProps) =
                         role="menuitem"
                         onClick={() => {
                           setMenuId(null);
-                          console.log("delete task (mock)", task.id);
+                          setTaskToDelete(task);
                         }}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -109,6 +111,17 @@ const WorkspaceTasksCard = ({ initialTasks, isLead }: WorkspaceTasksCardProps) =
       >
         Add New Task
       </Button>
+
+      <DeleteTaskModal
+        isOpen={taskToDelete !== null}
+        onClose={() => setTaskToDelete(null)}
+        taskTitle={taskToDelete?.title ?? ""}
+        onConfirm={() => {
+          if (!taskToDelete) return;
+          setTasks((prev) => prev.filter((t) => t.id !== taskToDelete.id));
+          console.log("delete task confirmed (mock)", taskToDelete.id);
+        }}
+      />
     </WorkspaceCard>
   );
 };

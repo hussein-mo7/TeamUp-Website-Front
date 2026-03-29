@@ -1,15 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { LogOut, Settings } from "lucide-react";
 import { Heading } from "@/components/ui/typography";
 import { Button } from "@/components/ui/buttons";
+import { variantClasses, sizeClasses } from "@/components/ui/buttons/buttonStyles";
+import { PROJECT_SETTINGS_NAV_LINKS } from "@/mock/Dashboard";
 
 interface WorkspaceHeaderProps {
   /** Mentor / team admin — show Project Setting */
   isLead: boolean;
+  onLeaveRequest: () => void;
 }
 
-const WorkspaceHeader = ({ isLead }: WorkspaceHeaderProps) => {
+const WorkspaceHeader = ({ isLead, onLeaveRequest }: WorkspaceHeaderProps) => {
   return (
     <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
       <Heading level="h3" className="font-semibold text-content">
@@ -21,21 +25,19 @@ const WorkspaceHeader = ({ isLead }: WorkspaceHeaderProps) => {
           variant="secondary"
           size="md"
           className="!border-none !text-error !bg-transparent hover:!bg-error/10 hover:!text-error"
-          onClick={() => console.log("leave project (mock)")}
+          onClick={onLeaveRequest}
         >
           <LogOut className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
           Leave Project
         </Button>
         {isLead ? (
-          <Button
-            type="button"
-            variant="primary"
-            size="md"
-            onClick={() => console.log("project settings (mock)")}
+          <Link
+            href={PROJECT_SETTINGS_NAV_LINKS[0].href}
+            className={`inline-flex items-center justify-center rounded-lg font-primary font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 ${variantClasses.primary} ${sizeClasses.md}`}
           >
             <Settings className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
             Project Setting
-          </Button>
+          </Link>
         ) : null}
       </div>
     </div>

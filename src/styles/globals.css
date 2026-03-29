@@ -43,6 +43,13 @@ body::-webkit-scrollbar {
   height: 0;
 }
 
+/* Scrollable modal content when body scroll is locked (wheel + touch) */
+.modal-panel-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
 /* ── Star spin animation ─────────────────────────── */
 @keyframes spin-slow {
   from {

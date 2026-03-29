@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { FileText } from "lucide-react";
+import { SubmitProjectReviewModal } from "@/components/ui/modals";
 import { Button } from "@/components/ui/buttons";
 
 interface WorkspaceProjectOverviewProps {
@@ -17,18 +19,21 @@ const WorkspaceProjectOverview = ({
   description,
   isLead,
 }: WorkspaceProjectOverviewProps) => {
+  const [submitReviewOpen, setSubmitReviewOpen] = useState(false);
+
   return (
+    <>
     <div
-      className="mb-6 flex flex-col gap-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_2px_16px_rgba(0,0,0,0.06)]
-        sm:p-6 lg:flex-row lg:items-stretch lg:gap-6"
+      className="mb-6 flex flex-col gap-5 rounded-2xl border border-gray-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]
+       lg:flex-row lg:items-stretch lg:gap-6 overflow-hidden"
     >
       <div
-        className="flex h-40 shrink-0 items-center justify-center rounded-xl bg-primary-light sm:h-44 lg:h-auto lg:w-52
+        className="flex h-40 shrink-0 items-center justify-center bg-primary-light sm:h-44 lg:h-auto lg:w-52
           xl:w-56"
       >
         <FileText className="h-14 w-14 text-primary" strokeWidth={1.5} aria-hidden="true" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-4 p-3 md:p-5 pl-3 md:pl-0">
         <div>
           <h2 className="font-primary text-lg font-semibold leading-tight text-content sm:text-xl">
             {projectName}
@@ -57,7 +62,7 @@ const WorkspaceProjectOverview = ({
                 type="button"
                 variant="primary"
                 size="md"
-                onClick={() => console.log("submit for review (mock)")}
+                onClick={() => setSubmitReviewOpen(true)}
               >
                 Submit for Review
               </Button>
@@ -94,6 +99,13 @@ const WorkspaceProjectOverview = ({
         </div>
       </div>
     </div>
+
+    <SubmitProjectReviewModal
+      isOpen={submitReviewOpen}
+      onClose={() => setSubmitReviewOpen(false)}
+      onSubmit={(note) => console.log("submit for review (mock)", note)}
+    />
+    </>
   );
 };
 

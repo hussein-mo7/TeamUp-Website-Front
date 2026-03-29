@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Download, File } from "lucide-react";
 import type { MockWorkspaceFile } from "@/mock/TeamWorkspace";
+import { UploadFileModal } from "@/components/ui/modals";
 import WorkspaceCard from "./WorkspaceCard";
 import { Button, IconButton } from "@/components/ui/buttons";
 
@@ -10,7 +12,16 @@ interface SharedFilesCardProps {
   isLead: boolean;
 }
 
-const SharedFilesCard = ({ files, isLead }: SharedFilesCardProps) => {
+function formatSizeLabel(bytes: number): string {
+  if (bytes < 1024) return `${bytes} b`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} kb`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} mb`;
+}
+
+const SharedFilesCard = ({ files: initialFiles, isLead }: SharedFilesCardProps) => {
+  const [files, setFiles] = useState(initialFiles);
+  const [uploadOpen, setUploadOpen] = useState(false);
+
   return (
     <WorkspaceCard title="Shared Files">
       <ul className="mb-4 flex flex-col gap-3">
@@ -46,10 +57,29 @@ const SharedFilesCard = ({ files, isLead }: SharedFilesCardProps) => {
         size="md"
         disabled={!isLead}
         className={`w-full ${!isLead ? "bg-gray-100 text-content-muted hover:bg-gray-100" : ""}`}
-        onClick={() => console.log("add file (mock)")}
+        onClick={() => setUploadOpen(true)}
       >
         Add New File
       </Button>
+
+      <UploadFileModal
+        isOpen={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={(uploaded) => {
+          const file = uploaded[0];
+          if (!file) return;
+          setFiles((prev) => [
+            ...prev,
+            {
+              id: Date.now(),
+              name: file.name,
+              uploadedBy: "you",
+              sizeLabel: formatSizeLabel(file.size),
+            },
+          ]);
+          console.log("upload (mock)", file.name);
+        }}
+      />
     </WorkspaceCard>
   );
 };

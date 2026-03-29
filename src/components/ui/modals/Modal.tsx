@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 interface ModalProps {
@@ -10,7 +11,6 @@ interface ModalProps {
   className?: string;
   showCloseButton?: boolean;
   closeOnBackdrop?: boolean;
-  /** Override default close control styles (e.g. neutral icon instead of red). */
   closeButtonClassName?: string;
 }
 
@@ -24,12 +24,32 @@ const Modal = ({
   closeButtonClassName = "",
 }: ModalProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
-  /* ── lock body scroll while open ── */
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    setMounted(true);
+  }, []);
+
+  /* ── lock page scroll ── */
+  useEffect(() => {
+    if (!isOpen) return;
+    const scrollY = window.scrollY;
+    const html = document.documentElement;
+    const body = document.body;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = "";
+      html.style.overflow = "";
+      body.style.overflow = "";
+      body.style.position = "";
+      body.style.top = "";
+      body.style.width = "";
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 
@@ -43,47 +63,48 @@ const Modal = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
+    /*
+     * data-lenis-prevent: Lenis (smoothWheel) otherwise captures wheel and scrolls the page
+     * instead of native overflow on this subtree — see @studio-freight/lenis README.
+     * overflow-hidden: do not scroll the overlay; only the inner panel scrolls.
+     */
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4
-        transition-opacity duration-300
-        ${isOpen ? "opacity-100" : "opacity-0"}`}
+      data-lenis-prevent
+      className="fixed inset-0 z-50 overflow-hidden"
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
         onClick={closeOnBackdrop ? onClose : undefined}
         aria-hidden="true"
       />
 
-      {/* Panel */}
-      <div
-        ref={panelRef}
-        className={`relative z-10 bg-white rounded-lg shadow-2xl w-full
-          animate-modal-in ${className}`}
-      >
-        {showCloseButton && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full
-              transition-colors duration-200
-              ${
-                closeButtonClassName ||
-                "text-content-muted hover:bg-gray-100 hover:text-content"
-              }`}
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
-        )}
-        {children}
+      <div className="relative flex min-h-full items-center justify-center p-4 pointer-events-none">
+        <div
+          ref={panelRef}
+          className={`relative z-10 my-8 w-full pointer-events-auto bg-white rounded-lg shadow-2xl animate-modal-in ${className}`}
+        >
+          {showCloseButton && (
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full
+                transition-colors duration-200
+                ${closeButtonClassName || "text-content-muted hover:bg-gray-100 hover:text-content"}`}
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
+          )}
+          {children}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

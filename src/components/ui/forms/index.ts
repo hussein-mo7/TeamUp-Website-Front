@@ -6,3 +6,7 @@ export { default as OrDivider } from "./OrDivider";
 export { default as SocialButton } from "./SocialButton";
 export { default as SubmitButton } from "./SubmitButton";
 export { default as Select } from "./Select";
+export { default as TagInput } from "./TagInput";
+export type { TagInputProps } from "./TagInput";
+export { default as FileDropzone } from "./FileDropzone";
+export type { FileDropzoneProps } from "./FileDropzone";

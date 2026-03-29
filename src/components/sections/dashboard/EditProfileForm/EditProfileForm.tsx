@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Camera, X } from "lucide-react";
+import { Camera } from "lucide-react";
 import Input from "@/components/ui/forms/Input";
 import Textarea from "@/components/ui/forms/Textarea";
+import TagInput from "@/components/ui/forms/TagInput";
 import { Button, IconButton, LinkButton } from "@/components/ui/buttons";
 
 const sectionCard =
@@ -39,30 +40,7 @@ const EditProfileForm = ({
   const [university, setUniversity] = useState(initialUniversity);
   const [major, setMajor] = useState(initialMajor);
   const [skills, setSkills] = useState<string[]>(initialSkills);
-  const [skillInput, setSkillInput] = useState("");
   const [bio, setBio] = useState(initialBio);
-
-  const addSkill = useCallback(() => {
-    const next = skillInput.trim();
-    if (!next) return;
-    if (skills.some((s) => s.toLowerCase() === next.toLowerCase())) {
-      setSkillInput("");
-      return;
-    }
-    setSkills((prev) => [...prev, next]);
-    setSkillInput("");
-  }, [skillInput, skills]);
-
-  const removeSkill = useCallback((skill: string) => {
-    setSkills((prev) => prev.filter((s) => s !== skill));
-  }, []);
-
-  const handleSkillKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addSkill();
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,41 +134,14 @@ const EditProfileForm = ({
           </div>
 
           <div className={sectionCard}>
-            <p className="mb-3 font-primary text-sm font-medium text-content-light">
-              My Skills
-            </p>
-            <div className="flex min-h-[44px] flex-wrap items-center gap-2">
-              {skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="inline-flex max-w-full items-center gap-1 rounded-full bg-primary-light
-                    py-1 pl-2.5 pr-1 font-primary text-xs font-medium text-primary"
-                >
-                  <span className="break-words">{skill}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="flex shrink-0 rounded-full p-0.5 text-primary hover:bg-primary/10"
-                    aria-label={`Remove ${skill}`}
-                  >
-                    <X size={14} aria-hidden="true" />
-                  </button>
-                </span>
-              ))}
-              <input
-                id="profile-skills-input"
-                type="text"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={handleSkillKeyDown}
-                onBlur={() => {
-                  if (skillInput.trim()) addSkill();
-                }}
-                placeholder="Add a skill…"
-                className="min-w-[8rem] flex-1 border-0 bg-transparent font-primary text-sm text-content
-                  outline-none placeholder:text-content-muted focus:ring-0"
-              />
-            </div>
+            <TagInput
+              id="profile-skills-input"
+              label="My Skills"
+              value={skills}
+              onChange={setSkills}
+              placeholder="Add a skill…"
+              variant="minimal"
+            />
           </div>
 
           <div className={sectionCard}>
