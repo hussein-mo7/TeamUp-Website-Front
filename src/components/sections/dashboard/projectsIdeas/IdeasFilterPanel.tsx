@@ -2,21 +2,19 @@
 import GenericFilterPanel, { FilterFieldConfig } from "@/components/ui/forms/FilterPanel";
 import type { FiltersObject } from "@/components/ui/forms/FilterPanel";
 import {
-  FIND_TEAM_CATEGORY_OPTIONS,
-  FIND_TEAM_ROLE_OPTIONS,
-  FIND_TEAM_STATUS_OPTIONS,
-} from "@/mock/FindTeam";
+  IDEAS_CATEGORY_OPTIONS,
+  IDEAS_PRICE_OPTIONS,
+} from "@/mock/ProjectsIdeas";
 
-export interface FindTeamFilters extends FiltersObject {
+export interface IdeasFilters extends FiltersObject {
   category: string;
-  availableRole: string;
+  price: string;
   requiredSkills: string[];
-  teamStatus: string;
 }
 
-interface FindTeamFilterPanelProps {
-  filters: FindTeamFilters;
-  onChange: (filters: FindTeamFilters) => void;
+interface IdeasFilterPanelProps {
+  filters: IdeasFilters;
+  onChange: (filters: IdeasFilters) => void;
   onApply: () => void;
   onCancel: () => void;
 }
@@ -26,38 +24,31 @@ const FILTER_FIELDS: FilterFieldConfig[] = [
     key: "category",
     label: "Project Category",
     type: "select",
-    options: FIND_TEAM_CATEGORY_OPTIONS,
-    id: "filter-category",
-  },
-  {
-    key: "availableRole",
-    label: "Available Roles",
-    type: "select",
-    options: FIND_TEAM_ROLE_OPTIONS,
-    id: "filter-role",
+    options: IDEAS_CATEGORY_OPTIONS,
+    id: "ideas-filter-category",
   },
   {
     key: "requiredSkills",
     label: "Required Skills",
     type: "tags",
     placeholder: "Add skill…",
-    id: "filter-skills",
+    id: "ideas-filter-skills",
   },
   {
-    key: "teamStatus",
-    label: "Team Status",
+    key: "price",
+    label: "Price",
     type: "select",
-    options: FIND_TEAM_STATUS_OPTIONS,
-    id: "filter-status",
+    options: IDEAS_PRICE_OPTIONS,
+    id: "ideas-filter-price",
   },
 ];
 
-const FindTeamFilterPanel = ({
+const IdeasFilterPanel = ({
   filters,
   onChange,
   onApply,
   onCancel,
-}: FindTeamFilterPanelProps) => {
+}: IdeasFilterPanelProps) => {
   return (
     <GenericFilterPanel
       filters={filters}
@@ -69,4 +60,4 @@ const FindTeamFilterPanel = ({
   );
 };
 
-export default FindTeamFilterPanel;
+export default IdeasFilterPanel;

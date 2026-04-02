@@ -32,7 +32,7 @@ const Textarea = ({
       {label && (
         <label
           htmlFor={id}
-          className="font-primary text-sm font-medium text-content-light"
+          className="font-primary text-sm text-content-light"
         >
           {label}
         </label>

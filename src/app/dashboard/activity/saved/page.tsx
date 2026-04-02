@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/ui/navigation";
+
+export const metadata: Metadata = {
+  title: "TeamUp — My Saved Projects",
+};
 import {
   ActivityShell,
   ActivityToolbar,

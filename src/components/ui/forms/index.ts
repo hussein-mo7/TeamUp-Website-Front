@@ -10,3 +10,5 @@ export { default as TagInput } from "./TagInput";
 export type { TagInputProps } from "./TagInput";
 export { default as FileDropzone } from "./FileDropzone";
 export type { FileDropzoneProps } from "./FileDropzone";
+export { default as FilterPanel } from "./FilterPanel";
+export type { FilterFieldConfig, FiltersObject } from "./FilterPanel";

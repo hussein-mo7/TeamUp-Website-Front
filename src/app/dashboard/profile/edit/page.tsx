@@ -1,5 +1,10 @@
 import { MOCK_USER } from "@/mock/Dashboard";
+import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/ui/navigation";
+
+export const metadata: Metadata = {
+  title: "TeamUp — Edit Profile",
+};
 import { EditProfileForm } from "@/components/sections/dashboard";
 
 const ProfileEditPage = () => {

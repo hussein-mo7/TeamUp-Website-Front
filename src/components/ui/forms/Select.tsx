@@ -26,7 +26,7 @@ const Select = ({
       {label && (
         <label
           htmlFor={id}
-          className="font-primary text-sm text-content-light font-medium"
+          className="font-primary text-sm text-content-light"
         >
           {label}
         </label>
