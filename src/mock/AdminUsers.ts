@@ -15,6 +15,33 @@ export interface AdminUserRecord {
   avatar: string;
 }
 
+export interface AdminUserDetailRecord extends AdminUserRecord {
+  university: string;
+  major: string;
+  bio: string;
+  joinedTeam: string;
+  skills: string[];
+  areaOfExpertise?: string;
+  activeProjects?: number;
+  completedProjects?: number;
+  supervisedProjects?: AdminUserSupervisedProjectRecord[];
+  postedIdeas?: AdminUserPostedIdeaRecord[];
+}
+
+export interface AdminUserSupervisedProjectRecord {
+  teamName: string;
+  status: "Completed" | "In Progress";
+  members: string[];
+  selected: boolean;
+}
+
+export interface AdminUserPostedIdeaRecord {
+  title: string;
+  status: "Pending" | "Approved" | "Rejected";
+  date: string;
+  selected: boolean;
+}
+
 const ADMIN_USER_NAMES = [
   "Wafaa Amjad",
   "Ahmed Hassan",
@@ -91,6 +118,71 @@ export const ADMIN_USERS: AdminUserRecord[] = ADMIN_USER_NAMES.map((name, index)
   selected: ADMIN_USER_SELECTED_IDS.has(index + 1),
   avatar: "/images/user.jpg",
 }));
+
+const buildStudentDetails = (record: AdminUserRecord): AdminUserDetailRecord => ({
+  ...record,
+  email: "Example@gmail.com",
+  joinedAt: new Date(Date.UTC(2026, 2, 20)).toISOString(),
+  status: "Active",
+  university: "AlAzhar",
+  major: "Software Engineering",
+  bio: "UI/UX Design student dedicated to creating user-centric digital experiences. I combine empathy with data-driven design to build intuitive interfaces. Skilled in Figma, Adobe XD, and visual storytelling. Ready to bring creative ideas to life!",
+  joinedTeam: "Software Engineering",
+  skills: ["Ui design", "Ux design", "web design", "mobile design"],
+});
+
+const buildMentorDetails = (record: AdminUserRecord): AdminUserDetailRecord => ({
+  ...record,
+  email: record.email,
+  university: "AlAzhar",
+  major: "Senior Product Designer",
+  bio: "Experienced mentor focused on guiding teams through product strategy, interface design, and project delivery.",
+  joinedTeam: "Mentor Program",
+  skills: ["Fundraising", "System Design", "Full-stack Dev", "Business Scaling"],
+  areaOfExpertise: "UI/UX Design",
+  activeProjects: 5,
+  completedProjects: 7,
+  supervisedProjects: [
+    { teamName: "Team name", status: "Completed", members: ["SA", "WA", "AA", "LA"], selected: false },
+    { teamName: "Team name", status: "In Progress", members: ["SA", "WA", "AA", "LA"], selected: true },
+    { teamName: "Team name", status: "In Progress", members: ["SA", "WA", "AA", "LA"], selected: true },
+    { teamName: "Team name", status: "In Progress", members: ["SA", "WA", "AA", "LA"], selected: false },
+    { teamName: "Team name", status: "Completed", members: ["SA", "WA", "AA", "LA"], selected: false },
+  ],
+  postedIdeas: [
+    { title: "Idea Title", status: "Pending", date: "2 days ago", selected: false },
+    { title: "Idea Title", status: "Approved", date: "2 days ago", selected: true },
+    { title: "Idea Title", status: "Rejected", date: "2 days ago", selected: false },
+  ],
+});
+
+const buildGraduateDetails = (record: AdminUserRecord): AdminUserDetailRecord => ({
+  ...record,
+  email: record.email,
+  university: "AlAzhar",
+  major: "Software Engineering",
+  bio: "Graduate focused on shipping polished academic projects and preparing for product roles.",
+  joinedTeam: "Graduate Cohort",
+  skills: ["UI design", "UX research", "Prototyping", "Web design"],
+  areaOfExpertise: "Product Design",
+  postedIdeas: [
+    { title: "Idea Title", status: "Pending", date: "2 days ago", selected: false },
+    { title: "Idea Title", status: "Pending", date: "2 days ago", selected: false },
+    { title: "Idea Title", status: "Approved", date: "2 days ago", selected: true },
+    { title: "Idea Title", status: "Rejected", date: "2 days ago", selected: true },
+    { title: "Idea Title", status: "Rejected", date: "2 days ago", selected: false },
+  ],
+});
+
+export const ADMIN_USER_DETAILS: AdminUserDetailRecord[] = ADMIN_USERS.map((record) => {
+  if (record.id === 1) return buildStudentDetails(record);
+  if (record.role === "Mentor") return buildMentorDetails(record);
+  if (record.role === "Graduate") return buildGraduateDetails(record);
+  return buildStudentDetails(record);
+});
+
+export const getAdminUserDetailById = (id: number) =>
+  ADMIN_USER_DETAILS.find((user) => user.id === id) ?? null;
 
 export const ADMIN_USERS_PAGE_SIZE_OPTIONS = [12, 24, 36] as const;
 export const ADMIN_USERS_STATUS_FILTERS: AdminUsersStatusFilter[] = [

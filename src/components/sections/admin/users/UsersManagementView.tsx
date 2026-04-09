@@ -146,8 +146,8 @@ const UsersManagementView = () => {
     <div className="flex flex-col">
       <Breadcrumb items={[{ label: "Dashboard", href: "/admin" }, { label: "Users Management" }]} />
 
-      <section className="space-y-2 mb-5">
-        <Heading level="h3" className="text-[28px] font-semibold text-content sm:text-[32px]">
+      <section className="space-y-1 mb-5">
+        <Heading level="h4" className="text-[28px] font-semibold text-content sm:text-[30px]">
           Users Management
         </Heading>
         <p className="max-w-2xl font-primary text-sm text-slate-500 sm:text-base">
@@ -239,7 +239,7 @@ const UsersManagementView = () => {
           </div>
         </div>
 
-        <div className="px-4 pb-5 sm:px-5">
+        <div className="flex justify-center px-4 pb-5 sm:px-5">
           <UsersBulkActionsBar
             selectedCount={selectedCount}
             onApprove={handleBulkApprove}

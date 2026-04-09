@@ -27,7 +27,7 @@ const UsersToolbar = ({
 }: UsersToolbarProps) => {
   return (
     <div className="flex flex-col gap-3 border-b border-slate-100 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
-      <div className="relative w-full lg:max-w-2xl">
+      <div className="relative w-full">
         <Search
           size={16}
           className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
@@ -43,20 +43,15 @@ const UsersToolbar = ({
         />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-[332px] lg:grid-cols-2">
+      <div className="flex flex-row justify-center gap-3">
         <div className="relative">
-          <Filter
-            size={15}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            aria-hidden="true"
-          />
           <select
             value={statusFilter}
             onChange={(event) =>
               onStatusFilterChange(event.target.value as AdminUsersStatusFilter)
             }
             aria-label="Filter by status"
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-10 font-primary text-sm text-content focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+            className="h-11 rounded-xl border border-slate-200 bg-white pl-5 pr-0 font-primary text-sm text-content focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
           >
             {ADMIN_USERS_STATUS_FILTERS.map((option) => (
               <option key={option} value={option}>
@@ -67,18 +62,13 @@ const UsersToolbar = ({
         </div>
 
         <div className="relative">
-          <Filter
-            size={15}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            aria-hidden="true"
-          />
           <select
             value={roleFilter}
             onChange={(event) =>
               onRoleFilterChange(event.target.value as AdminUsersRoleFilter)
             }
             aria-label="Filter by role"
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-10 font-primary text-sm text-content focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+            className="h-11 rounded-xl border border-slate-200 bg-white pl-5 pr-0 font-primary text-sm text-content focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
           >
             {ADMIN_USERS_ROLE_FILTERS.map((option) => (
               <option key={option} value={option}>

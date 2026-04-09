@@ -109,7 +109,7 @@ const AdminUserActionsMenu = ({ user, onAction }: AdminUserActionsMenuProps) => 
       {open ? (
         <div className="absolute right-0 z-30 mt-2 w-44 overflow-hidden rounded-2xl border border-slate-200 bg-white py-1 shadow-[0_14px_32px_rgba(15,23,42,0.12)]">
           <Link
-            href={`/dashboard/users/${user.id}`}
+            href={`/admin/users/${user.id}`}
             className="flex items-center gap-2 px-3 py-2 font-primary text-xs text-content transition-colors hover:bg-slate-50"
             onClick={() => setOpen(false)}
           >
