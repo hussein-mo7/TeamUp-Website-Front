@@ -4,3 +4,6 @@ export { default as Footer } from "./Footer";
 export { default as MainLayout } from "./MainLayout";
 export { default as DashboardHeader } from "./DashboardHeader";
 export { default as DashboardLayout } from "./DashboardLayout";
+export { AdminDashboardLayout } from "./AdminDashboardLayout";
+export { AdminDashboardHeader } from "./AdminDashboardHeader";
+export type { AdminDashboardHeaderProps } from "./AdminDashboardHeader";

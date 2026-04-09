@@ -1,5 +1,5 @@
-import { AdminDashboardView } from "@/components/sections/admin";
+import { AdminMainDashboardView } from "@/components/sections/admin/main";
 
 export default function AdminDashboardPage() {
-  return <AdminDashboardView />;
+  return <AdminMainDashboardView />;
 }

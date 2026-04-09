@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AdminShell } from "@/components/sections/admin";
+import { AdminDashboardLayout } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "TeamUp — Admin Dashboard",
@@ -10,5 +10,5 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminDashboardLayout>{children}</AdminDashboardLayout>;
 }

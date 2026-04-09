@@ -9,3 +9,5 @@ export { default as DeleteAccountButton } from "./DeleteAccountButton";
 export type { DeleteAccountButtonProps } from "./DeleteAccountButton";
 export { default as DeleteProjectButton } from "./DeleteProjectButton";
 export type { DeleteProjectButtonProps } from "./DeleteProjectButton";
+export { AdminSidebar } from "./AdminSidebar";
+export type { AdminSidebarProps } from "./AdminSidebar";

@@ -9,6 +9,7 @@ interface Props {
 
 const allowedSections = new Set(
   ADMIN_NAV_ITEMS.filter((item) => item.href.startsWith("/admin/"))
+    .filter((item) => item.href !== "/admin/users")
     .map((item) => item.href.replace("/admin/", ""))
     .filter((value) => value.length > 0),
 );
