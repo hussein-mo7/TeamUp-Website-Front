@@ -8,7 +8,10 @@ import { Heading } from "@/components/ui/typography";
 import {
   AuthSocialActions,
   AuthSwitchPrompt,
+  AuthErrorBanner,
 } from "@/components/sections/auth";
+import { useSignUp } from "@/hooks/useAuth";
+import { getApiErrorMessage } from "@/lib/apiError";
 
 /* ── Static data ── */
 type Role = "Student" | "Graduate" | "Mentor";
@@ -83,6 +86,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const signUpMutation = useSignUp();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -103,13 +109,81 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const removeSkill = (skill: string) =>
     setSkills((prev) => prev.filter((s) => s !== skill));
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log({ ...form, role, university, major, skills, agreed });
+
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (!agreed) {
+      setErrorMessage("You must accept the terms before creating an account.");
+      return;
+    }
+
+    const trimmedFullName = form.fullName.trim();
+    const nameParts = trimmedFullName.split(/\s+/).filter(Boolean);
+
+    if (nameParts.length < 2) {
+      setErrorMessage("Please enter your first and last name.");
+      return;
+    }
+
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(" ");
+    const username = form.email.trim().split("@")[0] || trimmedFullName.replace(/\s+/g, ".").toLowerCase();
+
+    try {
+      const response = await signUpMutation.mutateAsync({
+        username,
+        email: form.email.trim(),
+        password: form.password,
+        firstName,
+        lastName,
+        role: role.toUpperCase() as "STUDENT" | "MENTOR" | "GRADUATE",
+      });
+
+      setSuccessMessage(response.message);
+      setForm({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setRole("Student");
+      setUniversity("");
+      setMajor("");
+      setSkills([]);
+      setSkillInput("");
+      setAgreed(false);
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "Failed to create account."),
+      );
+    }
   };
 
   return (
     <>
+      {errorMessage && (
+        <div className="mb-5">
+          <AuthErrorBanner
+            message={errorMessage}
+            variant="error"
+            onClose={() => setErrorMessage("")}
+          />
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-5">
+          <AuthErrorBanner
+            message={successMessage}
+            variant="success"
+            onClose={() => setSuccessMessage("")}
+          />
+        </div>
+      )}
+
       <Heading
         level="h3"
         className="font-semibold text-primary text-center mb-5"
@@ -360,7 +434,11 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         </label>
       </div>
 
-      <AuthSocialActions submitLabel="Create Account" onSubmit={handleSubmit} />
+      <AuthSocialActions
+        submitLabel={signUpMutation.isPending ? "Creating..." : "Create Account"}
+        onSubmit={handleSubmit}
+        submitDisabled={signUpMutation.isPending}
+      />
       <AuthSwitchPrompt
         promptText="Already have an account?"
         actionText="Sign IN"

@@ -37,7 +37,7 @@ const EmailStep = ({
 
       <p className="font-primary text-sm text-content text-center leading-relaxed max-w-[320px]">
         Enter the email address associated with your account and we&apos;ll send
-        you a code.
+        you a password reset link.
       </p>
 
       <div className="w-full">
@@ -52,7 +52,7 @@ const EmailStep = ({
       </div>
 
       <SubmitButton
-        label={isLoading ? "Sending..." : "Send Code"}
+        label={isLoading ? "Sending..." : "Send Reset Link"}
         onClick={handleSubmit}
         disabled={isLoading || !email.trim()}
       />

@@ -7,3 +7,4 @@ export { default as DashboardLayout } from "./DashboardLayout";
 export { AdminDashboardLayout } from "./AdminDashboardLayout";
 export { AdminDashboardHeader } from "./AdminDashboardHeader";
 export type { AdminDashboardHeaderProps } from "./AdminDashboardHeader";
+export { default as AuthGuard } from "./AuthGuard";

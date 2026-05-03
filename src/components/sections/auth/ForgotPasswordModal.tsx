@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronLeft, MailCheck } from "lucide-react";
 import { Modal } from "@/components/ui/modals";
-import { EmailStep, VerifyCodeStep, ResetPasswordStep } from "./forgotPassword";
+import { EmailStep } from "./forgotPassword";
+import { useForgotPassword } from "@/hooks/useAuth";
+import { Heading } from "@/components/ui/typography";
+import { getApiErrorMessage } from "@/lib/apiError";
 
-type ForgotStep = "email" | "verify" | "reset";
+type ForgotStep = "email" | "sent";
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
@@ -22,11 +26,14 @@ const ForgotPasswordModal = ({
   const [step, setStep] = useState<ForgotStep>(initialStep);
   const [email, setEmail] = useState(initialEmail);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const forgotPasswordMutation = useForgotPassword();
 
   useEffect(() => {
     if (!isOpen) return;
     setStep(initialStep);
     setEmail(initialEmail);
+    setErrorMessage("");
   }, [isOpen, initialStep, initialEmail]);
 
   const handleClose = () => {
@@ -35,38 +42,30 @@ const ForgotPasswordModal = ({
       setStep(initialStep);
       setEmail(initialEmail);
       setIsLoading(false);
+      setErrorMessage("");
     }, 300);
   };
 
-  const handleSendCode = (emailInput: string) => {
+  const handleSendCode = async (emailInput: string) => {
     setIsLoading(true);
     setEmail(emailInput);
-    setTimeout(() => {
+    setErrorMessage("");
+
+    try {
+      await forgotPasswordMutation.mutateAsync({ email: emailInput });
       setIsLoading(false);
-      setStep("verify");
-    }, 700);
+      setStep("sent");
+    } catch (error) {
+      setIsLoading(false);
+      setErrorMessage(
+        getApiErrorMessage(error, "Failed to send reset link."),
+      );
+    }
   };
 
-  const handleVerify = (code: string) => {
-    setIsLoading(true);
-    console.log("Verify code:", code);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep("reset");
-    }, 700);
-  };
-
-  const handleReset = (newPassword: string, confirmPassword: string) => {
-    setIsLoading(true);
-    console.log("Reset password payload:", { email, newPassword, confirmPassword });
-    setTimeout(() => {
-      setIsLoading(false);
-      handleClose();
-    }, 800);
-  };
-
-  const handleResend = () => {
-    console.log("Resend code to:", email);
+  const handleBackToEmail = () => {
+    setStep("email");
+    setErrorMessage("");
   };
 
   return (
@@ -84,22 +83,42 @@ const ForgotPasswordModal = ({
         />
       )}
 
-      {step === "verify" && (
-        <VerifyCodeStep
-          email={email}
-          onVerify={handleVerify}
-          onResend={handleResend}
-          onBack={() => setStep("email")}
-          isLoading={isLoading}
-        />
-      )}
+      {step === "sent" && (
+        <div className="flex flex-col items-center gap-5 text-center">
+          <div className="w-14 h-14 rounded-full bg-primary-light flex items-center justify-center">
+            <MailCheck size={26} className="text-primary" aria-hidden="true" />
+          </div>
 
-      {step === "reset" && (
-        <ResetPasswordStep
-          onReset={handleReset}
-          onBack={() => setStep("verify")}
-          isLoading={isLoading}
-        />
+          <Heading level="h4" className="text-primary font-semibold">
+            Check your email
+          </Heading>
+
+          <p className="font-primary text-sm text-content leading-relaxed max-w-[340px]">
+            If an account exists for <span className="font-semibold">{email}</span>, we sent a reset link.
+            Open that link to choose a new password.
+          </p>
+
+          <button
+            type="button"
+            onClick={handleBackToEmail}
+            className="flex items-center gap-2 font-primary text-xs text-content-light hover:text-primary transition-colors duration-150"
+          >
+            <ChevronLeft size={14} aria-hidden="true" className="text-content-light" />
+            <span>Use another email</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleClose}
+            className="w-full h-11 bg-primary text-white text-sm font-semibold font-primary rounded-xl transition-all duration-200 hover:bg-primary-dark"
+          >
+            Close
+          </button>
+
+          {errorMessage && (
+            <p className="text-sm text-red-500 font-primary">{errorMessage}</p>
+          )}
+        </div>
       )}
     </Modal>
   );

@@ -43,7 +43,6 @@ export const authService = {
       payload,
     );
 
-    persistToken(data.token);
     return data;
   },
 

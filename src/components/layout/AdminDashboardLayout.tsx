@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AdminSidebar } from "@/components/ui/navigation";
 import { AdminDashboardHeader } from "./AdminDashboardHeader";
 import { ADMIN_NAV_ITEMS } from "@/mock/AdminDashboard";
+import AuthGuard from "./AuthGuard";
 
 interface AdminDashboardLayoutProps {
   children: React.ReactNode;
@@ -40,32 +41,34 @@ export const AdminDashboardLayout = ({
 
   return (
     <div className="min-h-screen bg-white text-content">
-      <div className="flex min-h-screen">
-        {/* Desktop Sidebar */}
-        <AdminSidebar
-          activeHref={activeHref}
-          isMobileOpen={false}
-          onCloseMobile={() => {}}
-          isDesktop
-        />
+      <AuthGuard requiredRoles={["SYSTEM_ADMIN"]} fallbackRedirect="/auth?mode=signin" loadingLabel="Checking admin access...">
+        <div className="flex min-h-screen">
+          {/* Desktop Sidebar */}
+          <AdminSidebar
+            activeHref={activeHref}
+            isMobileOpen={false}
+            onCloseMobile={() => {}}
+            isDesktop
+          />
 
-        {/* Mobile Sidebar */}
-        <AdminSidebar
-          activeHref={activeHref}
-          isMobileOpen={mobileOpen}
-          onCloseMobile={() => setMobileOpen(false)}
-          isDesktop={false}
-        />
+          {/* Mobile Sidebar */}
+          <AdminSidebar
+            activeHref={activeHref}
+            isMobileOpen={mobileOpen}
+            onCloseMobile={() => setMobileOpen(false)}
+            isDesktop={false}
+          />
 
-        {/* Main Content */}
-        <div className="flex min-w-0 flex-1 flex-col">
-          <AdminDashboardHeader onMobileMenuClick={() => setMobileOpen(true)} />
+          {/* Main Content */}
+          <div className="flex min-w-0 flex-1 flex-col">
+            <AdminDashboardHeader onMobileMenuClick={() => setMobileOpen(true)} />
 
-          <main className="flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
-            {children}
-          </main>
+            <main className="flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </AuthGuard>
     </div>
   );
 };

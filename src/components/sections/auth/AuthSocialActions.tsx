@@ -6,6 +6,7 @@ import UniversityButton from "./UniversityButton";
 interface AuthSocialActionsProps {
   submitLabel: string;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  submitDisabled?: boolean;
   showUniversityButton?: boolean;
   onUniversityClick?: () => void;
   containerClassName?: string;
@@ -15,6 +16,7 @@ interface AuthSocialActionsProps {
 const AuthSocialActions = ({
   submitLabel,
   onSubmit,
+  submitDisabled = false,
   showUniversityButton = false,
   onUniversityClick,
   containerClassName = "mt-5",
@@ -22,7 +24,7 @@ const AuthSocialActions = ({
 }: AuthSocialActionsProps) => {
   return (
     <div className={`flex flex-col gap-4 ${containerClassName}`.trim()}>
-      <SubmitButton label={submitLabel} onClick={onSubmit} />
+      <SubmitButton label={submitLabel} onClick={onSubmit} disabled={submitDisabled} />
 
       {showUniversityButton && (
         <>

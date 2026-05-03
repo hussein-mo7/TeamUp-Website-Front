@@ -16,9 +16,6 @@ const Auth = () => {
   const [canAnimate, setCanAnimate] = useState(false);
   const [uniModalOpen, setUniModalOpen] = useState(false);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
-  const [forgotModalInitialStep, setForgotModalInitialStep] = useState<
-    "email" | "verify" | "reset"
-  >("email");
   const [forgotModalInitialEmail, setForgotModalInitialEmail] = useState("");
   const formScrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,12 +38,7 @@ const Auth = () => {
       setUniModalOpen(true);
     }
 
-    if (
-      forgotStepParam === "email" ||
-      forgotStepParam === "verify" ||
-      forgotStepParam === "reset"
-    ) {
-      setForgotModalInitialStep(forgotStepParam);
+    if (forgotStepParam === "email") {
       setForgotModalInitialEmail(sharedEmailParam);
       setForgotModalOpen(true);
     }
@@ -83,7 +75,6 @@ const Auth = () => {
   };
 
   const openForgotModal = () => {
-    setForgotModalInitialStep("email");
     setForgotModalInitialEmail("");
     setForgotModalOpen(true);
   };
@@ -287,7 +278,6 @@ const Auth = () => {
       />
       <ForgotPasswordModal
         isOpen={forgotModalOpen}
-        initialStep={forgotModalInitialStep}
         initialEmail={forgotModalInitialEmail}
         onClose={() => setForgotModalOpen(false)}
       />

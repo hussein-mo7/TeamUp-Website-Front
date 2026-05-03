@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getStoredAuthToken } from "@/lib/axios";
+import { decodeJwtPayload } from "@/lib/jwt";
 import { authService } from "@/services/auth.service";
 import type {
   ChangePasswordPayload,
@@ -11,7 +13,7 @@ import type {
 } from "@/types/auth";
 
 export const authQueryKeys = {
-  session: ["auth", "session"] as const,
+  session: (token?: string) => ["auth", "session", token ?? "anonymous"] as const,
 };
 
 export const useLogin = () =>
@@ -22,6 +24,11 @@ export const useLogin = () =>
 export const useSignUp = () =>
   useMutation({
     mutationFn: (payload: SignUpPayload) => authService.signUp(payload),
+  });
+
+export const useVerifyEmail = () =>
+  useMutation({
+    mutationFn: (payload: TokenPayload) => authService.verifyEmail(payload),
   });
 
 export const useForgotPassword = () =>
@@ -49,12 +56,42 @@ export const useRefreshToken = () =>
 
 export const useRevokeTokens = () =>
   useMutation({
-    mutationFn: (payload: RevokeTokensPayload) => authService.revokeTokens(payload),
+    mutationFn: (payload: RevokeTokensPayload) =>
+      authService.revokeTokens(payload),
   });
 
-export const useValidateToken = (payload?: TokenPayload, enabled = false) =>
-  useQuery({
-    queryKey: authQueryKeys.session,
-    queryFn: () => authService.validateToken(payload),
-    enabled,
+export const useLogout = () => {
+  const revokeTokensMutation = useRevokeTokens();
+
+  const logout = async () => {
+    const token = getStoredAuthToken();
+    const payload = token ? decodeJwtPayload<{ userId?: string }>(token) : null;
+
+    if (!payload?.userId) {
+      authService.clearToken();
+      return;
+    }
+
+    try {
+      await revokeTokensMutation.mutateAsync({ userId: payload.userId });
+    } catch (error) {
+      authService.clearToken();
+      throw error;
+    }
+  };
+
+  return {
+    logout,
+    ...revokeTokensMutation,
+  };
+};
+
+export const useValidateToken = (enabled = false) => {
+  const token = getStoredAuthToken();
+
+  return useQuery({
+    queryKey: authQueryKeys.session(token ?? undefined),
+    queryFn: () => authService.validateToken(),
+    enabled: enabled && Boolean(token),
   });
+};

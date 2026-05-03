@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Calendar,
@@ -28,6 +29,7 @@ import {
   ReportIssueModal,
 } from "@/components/ui/modals";
 import { Container } from "@/components/layout";
+import { useLogout } from "@/hooks/useAuth";
 import {
   MOCK_USER,
   DASHBOARD_NAV_LINKS,
@@ -37,6 +39,8 @@ import {
 
 const DashboardHeader = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useLogout();
 
   /* ── search ── */
   const [searchOpen, setSearchOpen] = useState(false);
@@ -669,7 +673,9 @@ const DashboardHeader = () => {
         isOpen={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
         onConfirm={() => {
-          console.log("logout (mock)");
+          void logout().finally(() => {
+            router.replace("/auth?mode=signin");
+          });
         }}
       />
 
