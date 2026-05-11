@@ -21,7 +21,7 @@ const MentorAreaCard = ({ skills }: MentorAreaCardProps) => {
           ))}
         </div>
       ) : (
-        <p className="font-primary text-sm text-content-light">Not set</p>
+        <p className="font-primary text-sm text-content-light">No areas added yet.</p>
       )}
     </div>
   );

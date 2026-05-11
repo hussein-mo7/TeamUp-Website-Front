@@ -3,12 +3,14 @@
 import { Breadcrumb } from "@/components/ui/navigation";
 import { ProfileSection } from "@/components/sections/dashboard";
 import { useCurrentUser } from "@/hooks/useUser";
+import { useUniversityName } from "@/hooks/useInstitution";
 import { getAvatarSrc, getDisplayRole, getFullName } from "@/lib/user";
 
 const MyProfilePage = () => {
   const { data: currentUser } = useCurrentUser();
   const displayUser = currentUser?.user ?? null;
   const academicProfile = displayUser?.academicProfile ?? null;
+  const universityLookup = useUniversityName(displayUser?.universityId ?? null);
   const displayRole = displayUser ? getDisplayRole(displayUser.role) : "User";
   const displayName = displayUser
     ? getFullName(displayUser.firstName, displayUser.lastName) || displayUser.username
@@ -16,7 +18,7 @@ const MyProfilePage = () => {
 
   const bio = displayUser?.bio ?? "";
   const skills = academicProfile?.skills ?? [];
-  const university = "";
+  const university = universityLookup.isLoading && displayUser?.universityId ? "Loading..." : universityLookup.universityName;
   const major = academicProfile?.major ?? "";
 
   return (

@@ -48,6 +48,11 @@ export interface SignUpPayload {
   firstName: string;
   lastName: string;
   role: Exclude<UserRole, "SYSTEM_ADMIN">;
+  universityId: string;
+  collegeId: string;
+  departmentId: string;
+  major?: string | null;
+  skills: string[];
 }
 
 export interface LoginPayload {

@@ -4,8 +4,8 @@ interface AcademicCardProps {
 }
 
 const AcademicCard = ({ university, major }: AcademicCardProps) => {
-  const universityLabel = university.trim() || "Not set";
-  const majorLabel = major.trim() || "Not set";
+  const universityLabel = university.trim() || "University not added yet.";
+  const majorLabel = major.trim() || "Major not added yet.";
 
   return (
     <div className="border border-gray-100 px-4 py-4 sm:px-6 sm:py-5 rounded-lg my-4">

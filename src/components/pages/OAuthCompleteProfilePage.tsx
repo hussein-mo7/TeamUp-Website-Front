@@ -4,20 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  ArrowRight,
   BadgeCheck,
   CheckCircle2,
   CircleUserRound,
-  Sparkles,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Heading } from "@/components/ui/typography";
 import { Input, Select, SubmitButton, TagInput } from "@/components/ui/forms";
+import { useUpdateCurrentUser } from "@/hooks/useUser";
+import { institutionService } from "@/services/institution.service";
 import { syncOAuthSession } from "@/lib/oauth";
 import {
   OAUTH_PROVIDER_DESCRIPTIONS,
   OAUTH_PROVIDER_LABELS,
-  OAUTH_ROLE_OPTIONS,
-  OAUTH_UNIVERSITY_OPTIONS,
   type OAuthProvider,
 } from "./oauth.constants";
 
@@ -42,11 +41,23 @@ const OAuthCompleteProfilePage = () => {
   const email = searchParams.get("email") ?? "your-email@example.com";
   const firstTime = searchParams.get("firstTime") !== "false";
 
-  const [role, setRole] = useState("STUDENT");
   const [university, setUniversity] = useState("");
   const [major, setMajor] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const updateCurrentUser = useUpdateCurrentUser();
+
+  const universitiesQuery = useQuery({
+    queryKey: ["institutions", "universities"],
+    queryFn: () => institutionService.getUniversities(),
+    enabled: isSessionReady,
+  });
+
+  const universityOptions = universitiesQuery.data?.universities.map((item) => ({
+    value: item.id,
+    label: item.name,
+  })) ?? [];
 
   useEffect(() => {
     let isMounted = true;
@@ -76,11 +87,13 @@ const OAuthCompleteProfilePage = () => {
   const handleContinue = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!role || !university) {
+    if (!university) {
+      setSaveError("Please select your university.");
       return;
     }
 
     setIsSubmitting(true);
+    setSaveError("");
 
     const token = await syncOAuthSession();
 
@@ -90,7 +103,19 @@ const OAuthCompleteProfilePage = () => {
       return;
     }
 
-    router.replace("/dashboard");
+    try {
+      await updateCurrentUser.mutateAsync({
+        universityId: university,
+        major: major.trim() || null,
+        skills,
+      });
+    } catch {
+      setIsSubmitting(false);
+      setSaveError("Failed to save your profile details.");
+      return;
+    }
+
+    router.replace("/dashboard/profile");
     setIsSubmitting(false);
   };
 
@@ -119,7 +144,7 @@ const OAuthCompleteProfilePage = () => {
 
                 <p className="mt-4 max-w-2xl font-primary text-sm leading-7 text-content-light sm:text-base">
                   We signed you in through {OAUTH_PROVIDER_LABELS[provider]}. Before we take you into the
-                  platform, choose the role and university that best match your account.
+                  platform, choose the university and academic details that best match your account.
                 </p>
 
                 <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -129,16 +154,8 @@ const OAuthCompleteProfilePage = () => {
                       title: "Identity",
                       text: displayName,
                     },
-                    {
-                      icon: BadgeCheck,
-                      title: "Provider",
-                      text: OAUTH_PROVIDER_DESCRIPTIONS[provider],
-                    },
-                    {
-                      icon: CheckCircle2,
-                      title: "Next step",
-                      text: firstTime ? "Complete details and continue" : "Go straight to your dashboard",
-                    },
+                    { icon: BadgeCheck, title: "Provider", text: OAUTH_PROVIDER_DESCRIPTIONS[provider] },
+                    { icon: CheckCircle2, title: "Next step", text: firstTime ? "Complete details and continue" : "Go straight to your dashboard" },
                   ].map((item) => (
                     <div
                       key={item.title}
@@ -166,7 +183,7 @@ const OAuthCompleteProfilePage = () => {
                     Why this step exists
                   </p>
                   <p className="mt-3 max-w-2xl font-primary text-sm leading-7 text-content-light">
-                    OAuth gives us a trusted login, but TeamUp still needs your role and university to
+                    OAuth gives us a trusted login, but TeamUp still needs your university and academic details to
                     build the right dashboard, permissions, and project experience.
                   </p>
                 </div>
@@ -214,17 +231,15 @@ const OAuthCompleteProfilePage = () => {
 
               <div className="mt-6 flex flex-col gap-4">
                 <Select
-                  id="oauth-role"
-                  label="Choose your role"
-                  options={OAUTH_ROLE_OPTIONS}
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-
-                <Select
                   id="oauth-university"
                   label="University"
-                  options={[{ value: "", label: "Select your university" }, ...OAUTH_UNIVERSITY_OPTIONS]}
+                  options={[
+                    {
+                      value: "",
+                      label: universitiesQuery.isLoading ? "Loading universities..." : "Select your university",
+                    },
+                    ...universityOptions,
+                  ]}
                   value={university}
                   onChange={(e) => setUniversity(e.target.value)}
                 />
@@ -247,16 +262,19 @@ const OAuthCompleteProfilePage = () => {
 
                 <div className="rounded-2xl border border-primary/10 bg-primary-light/40 p-4">
                   <p className="font-primary text-sm text-content leading-7">
-                    After you continue, we&apos;ll save your details and move you to the success screen
-                    before sending you into the dashboard.
+                    After you continue, we&apos;ll save your details and send you straight into the dashboard.
                   </p>
                 </div>
+
+                {saveError ? (
+                  <p className="font-primary text-sm text-error">{saveError}</p>
+                ) : null}
 
                 <div className="mt-1 flex flex-col gap-3 sm:flex-row">
                   <SubmitButton
                     label={isSubmitting ? "Saving..." : "Save and continue"}
                     onClick={handleContinue}
-                    disabled={isSubmitting || !isSessionReady || !role || !university}
+                    disabled={isSubmitting || !isSessionReady || !university}
                   />
 
                   <Link

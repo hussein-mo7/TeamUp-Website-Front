@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Input, PasswordInput } from "@/components/ui/forms";
+import Select from "@/components/ui/forms/Select";
 import { Heading } from "@/components/ui/typography";
 import {
   AuthSocialActions,
@@ -11,49 +13,13 @@ import {
   AuthErrorBanner,
 } from "@/components/sections/auth";
 import { useSignUp } from "@/hooks/useAuth";
+import { institutionService } from "@/services/institution.service";
 import { getApiErrorMessage } from "@/lib/apiError";
 
 /* ── Static data ── */
 type Role = "Student" | "Graduate" | "Mentor";
 
 const ROLES: Role[] = ["Student", "Graduate", "Mentor"];
-
-const UNIVERSITIES = [
-  "Islamic University of Gaza",
-  "Al-Azhar University - Gaza",
-  "Al-Aqsa University",
-  "University College of Applied Sciences (UCAS)",
-  "Gaza University",
-  "Palestine Technical College - Deir al-Balah",
-  "Al-Quds Open University - Gaza Branch",
-];
-
-const MAJORS = [
-  "Computer Science",
-  "Computer Engineering",
-  "Information Technology",
-  "Software Engineering",
-  "Electrical Engineering",
-  "Civil Engineering",
-  "Architecture",
-  "Business Administration",
-  "Accounting",
-  "Finance and Banking",
-  "Medicine",
-  "Dentistry",
-  "Pharmacy",
-  "Nursing",
-  "English Language and Literature",
-  "Arabic Language and Literature",
-  "Law",
-  "Media and Communication",
-  "Education",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Agriculture",
-];
 
 const SKILLS_OPTIONS = [
   "React",
@@ -80,7 +46,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     confirmPassword: "",
   });
   const [role, setRole] = useState<Role>("Student");
-  const [university, setUniversity] = useState("");
+  const [universityId, setUniversityId] = useState("");
+  const [collegeId, setCollegeId] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
   const [major, setMajor] = useState("");
   // Start with an empty skills list; avoid duplicate initial values
   const [skills, setSkills] = useState<string[]>([]);
@@ -89,6 +57,47 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const signUpMutation = useSignUp();
+
+  const universitiesQuery = useQuery({
+    queryKey: ["institutions", "universities"],
+    queryFn: () => institutionService.getUniversities(),
+  });
+
+  const collegesQuery = useQuery({
+    queryKey: ["institutions", "colleges", universityId],
+    queryFn: () => institutionService.getColleges(universityId),
+    enabled: Boolean(universityId),
+  });
+
+  const departmentsQuery = useQuery({
+    queryKey: ["institutions", "departments", collegeId],
+    queryFn: () => institutionService.getDepartments(collegeId),
+    enabled: Boolean(collegeId),
+  });
+
+  const universityOptions = useMemo(
+    () => universitiesQuery.data?.universities.map((item) => ({ value: item.id, label: item.name })) ?? [],
+    [universitiesQuery.data],
+  );
+
+  const collegeOptions = useMemo(
+    () => collegesQuery.data?.colleges.map((item) => ({ value: item.id, label: item.name })) ?? [],
+    [collegesQuery.data],
+  );
+
+  const departmentOptions = useMemo(
+    () => departmentsQuery.data?.departments.map((item) => ({ value: item.id, label: item.name })) ?? [],
+    [departmentsQuery.data],
+  );
+
+  useEffect(() => {
+    setCollegeId("");
+    setDepartmentId("");
+  }, [universityId]);
+
+  useEffect(() => {
+    setDepartmentId("");
+  }, [collegeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -132,6 +141,16 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     const lastName = nameParts.slice(1).join(" ");
     const username = form.email.trim().split("@")[0] || trimmedFullName.replace(/\s+/g, ".").toLowerCase();
 
+    if (!universityId || !collegeId || !departmentId) {
+      setErrorMessage("Please select your university, college, and department.");
+      return;
+    }
+
+    if (skills.length === 0) {
+      setErrorMessage("Please add at least one skill.");
+      return;
+    }
+
     try {
       const response = await signUpMutation.mutateAsync({
         username,
@@ -140,6 +159,11 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         firstName,
         lastName,
         role: role.toUpperCase() as "STUDENT" | "MENTOR" | "GRADUATE",
+        universityId,
+        collegeId,
+        departmentId,
+        major: major.trim() || null,
+        skills,
       });
 
       setSuccessMessage(response.message);
@@ -150,7 +174,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         confirmPassword: "",
       });
       setRole("Student");
-      setUniversity("");
+      setUniversityId("");
+      setCollegeId("");
+      setDepartmentId("");
       setMajor("");
       setSkills([]);
       setSkillInput("");
@@ -270,65 +296,67 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         </div>
 
         <div className="border border-gray-200 rounded-lg p-4 flex flex-col gap-4">
-          {/* University dropdown */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="signup-university"
-              className="font-primary text-sm text-content-light font-medium"
-            >
-              University
-            </label>
-            <div className="relative">
-              <select
-                id="signup-university"
-                value={university}
-                onChange={(e) => setUniversity(e.target.value)}
-                className="w-full appearance-none px-4 py-3 rounded-lg border border-gray-200
-                  text-sm font-primary text-content bg-white
-                  focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10
-                  transition-all duration-200"
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                {UNIVERSITIES.map((u) => (
-                  <option key={u} value={u}>
-                    {u}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <Select
+            id="signup-university"
+            label="University"
+            options={[
+              {
+                value: "",
+                label: universitiesQuery.isLoading ? "Loading universities..." : "Select",
+              },
+              ...universityOptions,
+            ]}
+            value={universityId}
+            onChange={(e) => setUniversityId(e.target.value)}
+          />
 
-          {/* Major dropdown */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="signup-major"
-              className="font-primary text-sm text-content-light font-medium"
-            >
-              Major of study
-            </label>
-            <div className="relative">
-              <select
-                id="signup-major"
-                value={major}
-                onChange={(e) => setMajor(e.target.value)}
-                className="w-full appearance-none px-4 py-3 rounded-lg border border-gray-200
-                  text-sm font-primary text-content bg-white
-                  focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10
-                  transition-all duration-200"
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                {MAJORS.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <Select
+            id="signup-college"
+            label="College"
+            options={[
+              {
+                value: "",
+                label: universityId
+                  ? collegesQuery.isLoading
+                    ? "Loading colleges..."
+                    : "Select"
+                  : "Choose university first",
+              },
+              ...collegeOptions,
+            ]}
+            value={collegeId}
+            onChange={(e) => setCollegeId(e.target.value)}
+            disabled={!universityId}
+          />
+
+          <Select
+            id="signup-department"
+            label="Department"
+            options={[
+              {
+                value: "",
+                label: collegeId
+                  ? departmentsQuery.isLoading
+                    ? "Loading departments..."
+                    : "Select"
+                  : "Choose college first",
+              },
+              ...departmentOptions,
+            ]}
+            value={departmentId}
+            onChange={(e) => setDepartmentId(e.target.value)}
+            disabled={!collegeId}
+          />
+
+          <Input
+            id="signup-major"
+            name="major"
+            type="text"
+            label="Major of study"
+            value={major}
+            onChange={(e) => setMajor(e.target.value)}
+            placeholder="Optional for now"
+          />
 
           {/* Skills tag input */}
           <div className="flex flex-col gap-2">

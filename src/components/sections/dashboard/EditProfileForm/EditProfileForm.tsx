@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
 import Input from "@/components/ui/forms/Input";
 import Textarea from "@/components/ui/forms/Textarea";
@@ -48,6 +49,7 @@ const EditProfileForm = ({
   const [saveError, setSaveError] = useState("");
   const updateCurrentUser = useUpdateCurrentUser();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   useEffect(() => {
     setName(initialName);
@@ -84,6 +86,7 @@ const EditProfileForm = ({
       });
 
       await queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+      router.replace(cancelHref);
     } catch {
       setSaveError("Failed to save profile changes.");
     }
@@ -171,7 +174,8 @@ const EditProfileForm = ({
                     name="university"
                     label="University"
                     value={university}
-                    onChange={(e) => setUniversity(e.target.value)}
+                    readOnly
+                    className="bg-gray-50"
                   />
                   <Input
                     id="profile-major"
