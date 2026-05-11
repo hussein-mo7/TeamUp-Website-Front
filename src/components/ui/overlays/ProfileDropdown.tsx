@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { User, ClipboardList, Settings, LogOut, MessageSquareWarning } from "lucide-react";
 import { MOCK_USER } from "@/mock/Dashboard";
+import { useCurrentUser } from "@/hooks/useUser";
+import { getAvatarSrc, getDisplayRole, getFullName } from "@/lib/user";
 
 interface ProfileDropdownProps {
   isOpen: boolean;
@@ -28,6 +30,16 @@ const ProfileDropdown = ({
   onSupervisionRequestsRequest,
 }: ProfileDropdownProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const { data: currentUser } = useCurrentUser();
+
+  const displayUser = currentUser?.user ?? null;
+  const displayName = displayUser
+    ? getFullName(displayUser.firstName, displayUser.lastName) || displayUser.username
+    : MOCK_USER.name;
+  const displayRole = displayUser
+    ? getDisplayRole(displayUser.role)
+    : MOCK_USER.role;
+  const displayAvatar = getAvatarSrc(displayUser?.profilePictureUrl);
 
   /* ── close on outside click ── */
   useEffect(() => {
@@ -71,8 +83,8 @@ const ProfileDropdown = ({
       <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 bg-primary/5">
         <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
           <Image
-            src="/images/user.jpg"
-            alt={MOCK_USER.name}
+            src={displayAvatar}
+            alt={displayName}
             fill
             unoptimized
             className="object-cover"
@@ -80,16 +92,16 @@ const ProfileDropdown = ({
         </div>
         <div className="min-w-0">
           <p className="font-primary text-sm font-semibold text-content truncate">
-            {MOCK_USER.name}
+            {displayName}
           </p>
           <p className="font-primary text-xs text-content-light truncate">
-            {MOCK_USER.role}
+            {displayRole}
           </p>
         </div>
       </div>
 
       {/* nav items — plain nav, no ARIA menu roles needed */}
-      <nav aria-label="User account navigation" className="py-1">
+      <nav aria-label="User account navigation">
         <Link
           href="/dashboard/profile"
           onClick={onClose}
@@ -98,7 +110,7 @@ const ProfileDropdown = ({
             transition-colors duration-150"
         >
           <User size={16} aria-hidden="true" className="flex-shrink-0" />
-          <span>{MOCK_USER.name}</span>
+          <span>{displayName}</span>
         </Link>
 
         {isMentor ? (

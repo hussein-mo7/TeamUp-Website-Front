@@ -9,6 +9,7 @@ import AuthSwitchPrompt from "./AuthSwitchPrompt";
 import AuthErrorBanner from "./AuthErrorBanner";
 import { useLogin } from "@/hooks/useAuth";
 import { getApiErrorMessage } from "@/lib/apiError";
+import { startOAuthLogin } from "@/lib/oauth";
 
 interface SignInFormProps {
   onSwitchToSignUp?: () => void;
@@ -100,6 +101,8 @@ const SignInForm = ({
         submitDisabled={loginMutation.isPending}
         showUniversityButton
         onUniversityClick={onUniversityClick}
+        onGoogleClick={() => startOAuthLogin("google")}
+        onLinkedInClick={() => startOAuthLogin("linkedin")}
         containerClassName="mt-10"
         socialGridClassName="mt-5"
       />

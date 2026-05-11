@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/modals";
 import { Container } from "@/components/layout";
 import { useLogout } from "@/hooks/useAuth";
+import { useCurrentUser } from "@/hooks/useUser";
+import { getAvatarSrc, getDisplayRole, getFullName } from "@/lib/user";
 import {
   MOCK_USER,
   DASHBOARD_NAV_LINKS,
@@ -41,6 +43,7 @@ const DashboardHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useLogout();
+  const { data: currentUser } = useCurrentUser();
 
   /* ── search ── */
   const [searchOpen, setSearchOpen] = useState(false);
@@ -59,7 +62,14 @@ const DashboardHeader = () => {
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   /* ── mentor supervision flow ── */
-  const isMentor = MOCK_USER.userRole === "mentor";
+  const displayUser = currentUser?.user ?? null;
+  const displayName = displayUser
+    ? getFullName(displayUser.firstName, displayUser.lastName) || displayUser.username
+    : MOCK_USER.name;
+  const displayRole = displayUser
+    ? getDisplayRole(displayUser.role)
+    : MOCK_USER.role;
+  const isMentor = displayRole === "Mentor";
   const [supervisionRequestsOpen, setSupervisionRequestsOpen] = useState(false);
   const [proposalDetailsOpen, setProposalDetailsOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<MockSupervisionRequest | null>(null);
@@ -324,16 +334,16 @@ const DashboardHeader = () => {
               >
                 <div className="hidden lg:flex flex-col items-end">
                   <span className="font-primary text-sm font-semibold text-white leading-tight">
-                    {MOCK_USER.name}
+                    {displayName}
                   </span>
                   <span className="font-primary text-[0.7rem] text-white/70 leading-tight">
-                    {MOCK_USER.role}
+                    {displayRole}
                   </span>
                 </div>
                 <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/40">
                   <Image
-                    src="/images/user.jpg"
-                    alt={MOCK_USER.name}
+                    src={getAvatarSrc(displayUser?.profilePictureUrl)}
+                    alt={displayName}
                     fill
                     unoptimized
                     className="object-cover"
@@ -504,7 +514,7 @@ const DashboardHeader = () => {
                         aria-hidden="true"
                         className="flex-shrink-0 ml-[2px]"
                       />
-                      <span className="ml-[2px]">{MOCK_USER.name}</span>
+                      <span className="ml-[2px]">{displayName}</span>
                     </Link>
 
                     {isMentor ? (
@@ -634,8 +644,8 @@ const DashboardHeader = () => {
                     ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all duration-200"
                   >
                     <Image
-                      src="/images/user.jpg"
-                      alt={MOCK_USER.name}
+                      src={getAvatarSrc(displayUser?.profilePictureUrl)}
+                      alt={displayName}
                       fill
                       unoptimized
                       className="object-cover"
@@ -646,10 +656,10 @@ const DashboardHeader = () => {
                       className="font-primary text-sm font-semibold text-content
                       group-hover:text-primary transition-colors duration-150 leading-tight"
                     >
-                      {MOCK_USER.name}
+                      {displayName}
                     </span>
                     <span className="font-primary text-xs text-content-light leading-tight">
-                      {MOCK_USER.role}
+                      {displayRole}
                     </span>
                   </div>
                 </Link>

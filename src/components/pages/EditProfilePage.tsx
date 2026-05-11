@@ -1,11 +1,11 @@
 "use client";
 
 import { Breadcrumb } from "@/components/ui/navigation";
-import { EditProfileForm, SettingsShell } from "@/components/sections/dashboard";
+import { EditProfileForm } from "@/components/sections/dashboard";
 import { useCurrentUser } from "@/hooks/useUser";
 import { getAvatarSrc, getDisplayRole, getFullName } from "@/lib/user";
 
-const SettingsProfilePage = () => {
+const EditProfilePage = () => {
   const { data: currentUser } = useCurrentUser();
   const displayUser = currentUser?.user ?? null;
   const academicProfile = displayUser?.academicProfile ?? null;
@@ -15,6 +15,8 @@ const SettingsProfilePage = () => {
     ? getFullName(displayUser.firstName, displayUser.lastName) || displayUser.username
     : "Edit Profile";
 
+  const bio = displayUser?.bio ?? "";
+
   return (
     <div>
       <Breadcrumb
@@ -23,11 +25,13 @@ const SettingsProfilePage = () => {
             label: isMentor ? "Main Mentor Dashboard" : "Main Student Dashboard",
             href: "/dashboard",
           },
-          { label: "Settings", href: "/dashboard/settings/profile" },
           { label: isMentor ? "Mentor Profile" : "Student Profile" },
         ]}
       />
-      <SettingsShell>
+      <div
+        className="overflow-hidden rounded-xl border border-gray-100 bg-white
+          shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:rounded-2xl"
+      >
         <div className="p-4 sm:p-6 md:p-8">
           <EditProfileForm
             initialName={displayName}
@@ -35,16 +39,16 @@ const SettingsProfilePage = () => {
             initialUniversity=""
             initialMajor={academicProfile?.major ?? ""}
             initialSkills={academicProfile?.skills ?? []}
-            initialBio={displayUser?.bio ?? ""}
+            initialBio={bio}
             initialAvatar={getAvatarSrc(displayUser?.profilePictureUrl)}
             actionsAlign="start"
             cancelHref="/dashboard/profile"
             isMentor={isMentor}
           />
         </div>
-      </SettingsShell>
+      </div>
     </div>
   );
 };
 
-export default SettingsProfilePage;
+export default EditProfilePage;

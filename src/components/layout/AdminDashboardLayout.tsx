@@ -41,7 +41,7 @@ export const AdminDashboardLayout = ({
 
   return (
     <div className="min-h-screen bg-white text-content">
-      <AuthGuard requiredRoles={["SYSTEM_ADMIN"]} fallbackRedirect="/auth?mode=signin" loadingLabel="Checking admin access...">
+      <AuthGuard requiredRoles={["SYSTEM_ADMIN"]} fallbackRedirect="/dashboard" loadingLabel="Checking admin access...">
         <div className="flex min-h-screen">
           {/* Desktop Sidebar */}
           <AdminSidebar

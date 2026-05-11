@@ -22,7 +22,7 @@ const TeamMemberRow = ({
     >
       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-gray-100">
         <Image
-          src={avatarSrc}
+          src={avatarSrc || "/images/user.jpg"}
           alt=""
           fill
           unoptimized

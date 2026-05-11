@@ -1,9 +1,23 @@
-import { MOCK_USER, MOCK_PROFILE_DISPLAY_ROLE, MOCK_MENTOR_SUPERVISED_PROJECTS } from "@/mock/Dashboard";
+"use client";
+
 import { Breadcrumb } from "@/components/ui/navigation";
 import { ProfileSection } from "@/components/sections/dashboard";
+import { useCurrentUser } from "@/hooks/useUser";
+import { getAvatarSrc, getDisplayRole, getFullName } from "@/lib/user";
 
 const MyProfilePage = () => {
-  const displayRole = MOCK_USER.userRole === "mentor" ? MOCK_USER.role : MOCK_PROFILE_DISPLAY_ROLE;
+  const { data: currentUser } = useCurrentUser();
+  const displayUser = currentUser?.user ?? null;
+  const academicProfile = displayUser?.academicProfile ?? null;
+  const displayRole = displayUser ? getDisplayRole(displayUser.role) : "User";
+  const displayName = displayUser
+    ? getFullName(displayUser.firstName, displayUser.lastName) || displayUser.username
+    : "My Profile";
+
+  const bio = displayUser?.bio ?? "";
+  const skills = academicProfile?.skills ?? [];
+  const university = "";
+  const major = academicProfile?.major ?? "";
 
   return (
     <div>
@@ -14,16 +28,14 @@ const MyProfilePage = () => {
         ]}
       />
       <ProfileSection
-        name={MOCK_USER.name}
+        name={displayName}
         displayRole={displayRole}
-        avatar={MOCK_USER.avatar}
-        skills={MOCK_USER.skills}
-        university={MOCK_USER.university}
-        major={MOCK_USER.major}
-        bio={MOCK_USER.bio}
+        avatar={getAvatarSrc(displayUser?.profilePictureUrl)}
+        skills={skills}
+        university={university}
+        major={major}
+        bio={bio}
         isOwnProfile
-        activeProjectsCount={MOCK_USER.userRole === "mentor" ? MOCK_MENTOR_SUPERVISED_PROJECTS.filter((p) => p.status !== "Completed").length : undefined}
-        completedProjectsCount={MOCK_USER.userRole === "mentor" ? MOCK_MENTOR_SUPERVISED_PROJECTS.filter((p) => p.status === "Completed").length : undefined}
       />
     </div>
   );

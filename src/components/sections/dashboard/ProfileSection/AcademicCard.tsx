@@ -4,6 +4,9 @@ interface AcademicCardProps {
 }
 
 const AcademicCard = ({ university, major }: AcademicCardProps) => {
+  const universityLabel = university.trim() || "Not set";
+  const majorLabel = major.trim() || "Not set";
+
   return (
     <div className="border border-gray-100 px-4 py-4 sm:px-6 sm:py-5 rounded-lg my-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
@@ -13,7 +16,7 @@ const AcademicCard = ({ university, major }: AcademicCardProps) => {
             University
           </p>
           <div className="rounded-lg border border-gray-200 bg-gray-50/50 px-3 py-2.5 sm:px-4">
-            <p className="break-words font-primary text-sm text-content">{university}</p>
+            <p className="break-words font-primary text-sm text-content">{universityLabel}</p>
           </div>
         </div>
 
@@ -23,7 +26,7 @@ const AcademicCard = ({ university, major }: AcademicCardProps) => {
             Major
           </p>
           <div className="rounded-lg border border-gray-200 bg-gray-50/50 px-3 py-2.5 sm:px-4">
-            <p className="break-words font-primary text-sm text-content">{major}</p>
+            <p className="break-words font-primary text-sm text-content">{majorLabel}</p>
           </div>
         </div>
       </div>

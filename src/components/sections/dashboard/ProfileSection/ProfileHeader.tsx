@@ -61,7 +61,7 @@ const ProfileHeader = ({
           sm:h-28 sm:w-28 md:h-32 md:w-32"
       >
         <Image
-          src={"/images/user.jpg"}
+          src={avatar || "/images/user.jpg"}
           alt={name}
           fill
           unoptimized

@@ -55,16 +55,6 @@ export const authService = {
     return data;
   },
 
-  async refreshToken(payload?: TokenPayload) {
-    const { data } = await api.post<AuthTokenResponse>(
-      `${AUTH_BASE_PATH}/refresh-token`,
-      payload ?? {},
-    );
-
-    persistToken(data.token);
-    return data;
-  },
-
   async validateToken(payload?: TokenPayload) {
     const { data } = await api.post<ValidateTokenResponse>(
       `${AUTH_BASE_PATH}/validate-token`,

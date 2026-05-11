@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Heading } from "@/components/ui/typography";
 import { Input, Select, SubmitButton, TagInput } from "@/components/ui/forms";
+import { syncOAuthSession } from "@/lib/oauth";
 import {
   OAUTH_PROVIDER_DESCRIPTIONS,
   OAUTH_PROVIDER_LABELS,
@@ -31,6 +32,7 @@ const getProvider = (value: string | null): OAuthProvider => {
 const OAuthCompleteProfilePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isSessionReady, setIsSessionReady] = useState(false);
 
   const provider = useMemo(
     () => getProvider(searchParams.get("provider")),
@@ -46,6 +48,31 @@ const OAuthCompleteProfilePage = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const prepareSession = async () => {
+      const token = await syncOAuthSession();
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (!token) {
+        router.replace("/auth?mode=signin");
+        return;
+      }
+
+      setIsSessionReady(true);
+    };
+
+    void prepareSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
+
   const handleContinue = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -55,12 +82,16 @@ const OAuthCompleteProfilePage = () => {
 
     setIsSubmitting(true);
 
-    window.setTimeout(() => {
+    const token = await syncOAuthSession();
+
+    if (!token) {
       setIsSubmitting(false);
-      router.push(
-        `/auth/oauth/success?provider=${provider}&firstTime=${firstTime ? "true" : "false"}`,
-      );
-    }, 700);
+      router.replace("/auth?mode=signin");
+      return;
+    }
+
+    router.replace("/dashboard");
+    setIsSubmitting(false);
   };
 
   return (
@@ -225,7 +256,7 @@ const OAuthCompleteProfilePage = () => {
                   <SubmitButton
                     label={isSubmitting ? "Saving..." : "Save and continue"}
                     onClick={handleContinue}
-                    disabled={isSubmitting || !role || !university}
+                    disabled={isSubmitting || !isSessionReady || !role || !university}
                   />
 
                   <Link

@@ -49,7 +49,7 @@ const ProfileSection = ({
       {isMentor ? (
         <>
           <MentorAreaCard skills={skills} />
-          <MentorAcademicCard title={major /* using 'major' as academic title in mock */} />
+          <MentorAcademicCard title={major} />
         </>
       ) : (
         <>

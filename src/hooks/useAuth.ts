@@ -49,11 +49,6 @@ export const useChangePassword = () =>
       authService.changePassword(payload),
   });
 
-export const useRefreshToken = () =>
-  useMutation({
-    mutationFn: (payload?: TokenPayload) => authService.refreshToken(payload),
-  });
-
 export const useRevokeTokens = () =>
   useMutation({
     mutationFn: (payload: RevokeTokensPayload) =>

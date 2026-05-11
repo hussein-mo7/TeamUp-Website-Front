@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Camera } from "lucide-react";
 import Input from "@/components/ui/forms/Input";
 import Textarea from "@/components/ui/forms/Textarea";
 import TagInput from "@/components/ui/forms/TagInput";
 import { Button, IconButton, LinkButton } from "@/components/ui/buttons";
+import { useUpdateCurrentUser } from "@/hooks/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 const sectionCard =
   "rounded-xl border border-gray-200 bg-white p-4 sm:p-5";
@@ -43,17 +45,48 @@ const EditProfileForm = ({
   const [major, setMajor] = useState(initialMajor);
   const [skills, setSkills] = useState<string[]>(initialSkills);
   const [bio, setBio] = useState(initialBio);
+  const [saveError, setSaveError] = useState("");
+  const updateCurrentUser = useUpdateCurrentUser();
+  const queryClient = useQueryClient();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    setName(initialName);
+    setRole(initialRole);
+    setUniversity(initialUniversity);
+    setMajor(initialMajor);
+    setSkills(initialSkills);
+    setBio(initialBio);
+  }, [initialName, initialRole, initialUniversity, initialMajor, initialSkills, initialBio]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("save profile (mock)", {
-      name,
-      role,
-      university,
-      major,
-      skills,
-      bio,
-    });
+
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      setSaveError("Name is required.");
+      return;
+    }
+
+    const nameParts = trimmedName.split(/\s+/).filter(Boolean);
+    const firstName = nameParts[0] ?? "";
+    const lastName = nameParts.slice(1).join(" ");
+
+    setSaveError("");
+
+    try {
+      await updateCurrentUser.mutateAsync({
+        firstName,
+        ...(lastName ? { lastName } : {}),
+        bio: bio.trim() || null,
+        major: major.trim() || null,
+        skills,
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+    } catch {
+      setSaveError("Failed to save profile changes.");
+    }
   };
 
   const actionsJustify =
@@ -177,13 +210,23 @@ const EditProfileForm = ({
           </div>
 
           <div className={`flex flex-wrap gap-3 pt-1 ${actionsJustify}`}>
-            <Button type="submit" variant="primary" size="md" className="min-w-[100px]">
-              Save
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              className="min-w-[100px]"
+              disabled={updateCurrentUser.isPending}
+            >
+              {updateCurrentUser.isPending ? "Saving..." : "Save"}
             </Button>
             <LinkButton href={cancelHref} variant="secondary" size="md" className="min-w-[100px]">
               Cancel
             </LinkButton>
           </div>
+
+          {saveError ? (
+            <p className="font-primary text-sm text-error">{saveError}</p>
+          ) : null}
         </div>
       </div>
     </form>

@@ -14,7 +14,7 @@ const StudentProfilePage = () => {
       <ProfileSection
         name={MOCK_STUDENT_PROFILE.name}
         displayRole={MOCK_STUDENT_PROFILE.displayRole}
-        avatar="/images/user.jpg"
+        avatar={MOCK_STUDENT_PROFILE.avatar || "/images/user.jpg"}
         skills={MOCK_STUDENT_PROFILE.skills}
         university={MOCK_STUDENT_PROFILE.university}
         major={MOCK_STUDENT_PROFILE.major}

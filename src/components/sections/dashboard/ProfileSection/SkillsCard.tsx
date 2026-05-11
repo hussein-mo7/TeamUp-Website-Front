@@ -8,17 +8,21 @@ const SkillsCard = ({ skills }: SkillsCardProps) => {
       <p className="mb-3 font-primary text-sm font-semibold text-content">
         My Skills
       </p>
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <span
-            key={skill}
-            className="max-w-full break-words rounded-full bg-primary-light px-2.5 py-1
-              font-primary text-xs font-medium text-primary sm:px-3"
-          >
-            {skill}
-          </span>
-        ))}
-      </div>
+      {skills.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill) => (
+            <span
+              key={skill}
+              className="max-w-full break-words rounded-full bg-primary-light px-2.5 py-1
+                font-primary text-xs font-medium text-primary sm:px-3"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className="font-primary text-sm text-content-light">No skills added yet.</p>
+      )}
     </div>
   );
 };

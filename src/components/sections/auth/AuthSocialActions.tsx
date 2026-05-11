@@ -9,6 +9,8 @@ interface AuthSocialActionsProps {
   submitDisabled?: boolean;
   showUniversityButton?: boolean;
   onUniversityClick?: () => void;
+  onGoogleClick?: () => void;
+  onLinkedInClick?: () => void;
   containerClassName?: string;
   socialGridClassName?: string;
 }
@@ -19,6 +21,8 @@ const AuthSocialActions = ({
   submitDisabled = false,
   showUniversityButton = false,
   onUniversityClick,
+  onGoogleClick,
+  onLinkedInClick,
   containerClassName = "mt-5",
   socialGridClassName = "",
 }: AuthSocialActionsProps) => {
@@ -33,8 +37,8 @@ const AuthSocialActions = ({
           <div
             className={`grid grid-cols-2 gap-3 ${socialGridClassName}`.trim()}
           >
-            <SocialButton label="Google" />
-            <SocialButton label="LinkedIn" />
+            <SocialButton label="Google" onClick={onGoogleClick} />
+            <SocialButton label="LinkedIn" onClick={onLinkedInClick} />
           </div>
         </>
       )}
