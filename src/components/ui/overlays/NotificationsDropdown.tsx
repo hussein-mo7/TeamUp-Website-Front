@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Bell, CheckCheck, X } from "lucide-react";
 import { useNotifications } from "@/hooks/useNotification";
 import type { NotificationResponse } from "@/types/notification";
@@ -155,12 +154,9 @@ const PanelContent = ({
     </ul>
 
     <div className="flex-shrink-0 border-t border-gray-100 bg-gray-50/60 px-4 py-2.5">
-      <Link
-        href="/dashboard/settings/notifications"
-        className="block w-full text-center font-primary text-xs font-medium text-primary transition-colors duration-150 hover:text-primary-dark"
-      >
-        View all notifications
-      </Link>
+      <p className="text-center font-primary text-xs text-content-muted">
+        Notifications stay in this header inbox.
+      </p>
     </div>
   </>
 );

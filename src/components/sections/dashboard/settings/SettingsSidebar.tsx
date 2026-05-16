@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Shield, Bell } from "lucide-react";
+import { User, Shield } from "lucide-react";
 import {
   DashboardSidebarNav,
   DeleteAccountButton,
@@ -12,7 +12,6 @@ import { getDisplayRole, getFullName } from "@/lib/user";
 const navIcon = {
   profile: User,
   account: Shield,
-  notifications: Bell,
 } as const;
 
 const SettingsSidebar = () => {

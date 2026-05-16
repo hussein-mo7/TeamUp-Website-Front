@@ -6,13 +6,11 @@ import AdminSettingsTabs, { type AdminSettingsTab } from "./AdminSettingsTabs";
 import ProfileSettingsSection from "./ProfileSettingsSection";
 import SystemSettingsSection from "./SystemSettingsSection";
 import ApprovalSettingsSection from "./ApprovalSettingsSection";
-import NotificationsSettingsSection from "./NotificationsSettingsSection";
 
 const tabItems: Array<{ id: AdminSettingsTab; label: string; href: string }> = [
   { id: "profile", label: "Profile Settings", href: "/admin/settings/profile" },
   { id: "system", label: "System Settings", href: "/admin/settings/system" },
   { id: "approval", label: "User & Approval Settings", href: "/admin/settings/approval" },
-  { id: "notifications", label: "Notifications Settings", href: "/admin/settings/notifications" },
 ];
 
 interface AdminSettingsViewProps {
@@ -38,7 +36,6 @@ const AdminSettingsView = ({ activeTab }: AdminSettingsViewProps) => {
       {activeTab === "profile" && <ProfileSettingsSection />}
       {activeTab === "system" && <SystemSettingsSection />}
       {activeTab === "approval" && <ApprovalSettingsSection />}
-      {activeTab === "notifications" && <NotificationsSettingsSection />}
     </div>
   );
 };

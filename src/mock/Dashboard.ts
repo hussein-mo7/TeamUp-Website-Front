@@ -397,11 +397,6 @@ export const SETTINGS_NAV_LINKS = (isMentor = false) => [
     label: "Account & Security",
     href: "/dashboard/settings/account",
   },
-  {
-    id: "notifications" as const,
-    label: "Notifications",
-    href: "/dashboard/settings/notifications",
-  },
 ];
 
 /** Account & Security settings form (mock). */

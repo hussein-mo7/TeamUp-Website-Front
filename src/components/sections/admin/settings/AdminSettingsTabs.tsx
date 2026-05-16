@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export type AdminSettingsTab = "profile" | "system" | "approval" | "notifications";
+export type AdminSettingsTab = "profile" | "system" | "approval";
 
 export interface AdminSettingsTabItem {
   id: AdminSettingsTab;
@@ -16,7 +16,7 @@ interface AdminSettingsTabsProps {
 const AdminSettingsTabs = ({ activeTab, items }: AdminSettingsTabsProps) => {
   return (
     <section className="border-b border-slate-200">
-      <div className="grid grid-cols-4 gap-3 text-center font-primary text-sm text-slate-500">
+      <div className="grid grid-cols-3 gap-3 text-center font-primary text-sm text-slate-500">
         {items.map((item) => (
           <Link
             key={item.id}
